@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日语文章打字练习</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Noto+Serif+JP:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f2ea;--card:#fffdf8;--ink:#2a2521;--muted:#857b70;--line:#e5ddd0;
+  --ok:#2c7a57;--bad:#c2410c;--bad-bg:#fde4d6;--accent:#b4462f;--accent-ink:#fff;
+  --pending:#b3a99d;--cursor:#b4462f;--soft:#efe8dc;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#1a1815;--card:#23201c;--ink:#efe9df;--muted:#9b9187;--line:#38322b;
+  --ok:#6cc59a;--bad:#ff8f63;--bad-bg:#4b2516;--accent:#e07a60;--accent-ink:#1a1815;
+  --pending:#6a6259;--cursor:#e07a60;--soft:#2c2823;
+}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Zen Kaku Gothic New",system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:780px;margin:0 auto;padding:28px 16px 56px}
+header h1{font-size:22px;margin:0 0 2px;letter-spacing:.02em}
+header p{margin:0;color:var(--muted);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:18px}
+.hidden{display:none!important}
+textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;resize:vertical;outline:none}
+textarea:focus{border-color:var(--accent)}
+#src{min-height:230px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.row.space{justify-content:space-between}
+button,.filebtn{font:inherit;font-size:15px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:hover,.filebtn:hover{border-color:var(--muted)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+button.ghost{border-color:transparent;background:transparent;color:var(--muted);padding:9px 10px}
+button:disabled{opacity:.4;cursor:default}
+.filebtn input{display:none}
+.opts{display:flex;flex-wrap:wrap;gap:14px 20px;margin-top:14px;font-size:14px;color:var(--muted)}
+.opts label{display:flex;align-items:center;gap:6px;cursor:pointer}
+select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.hint{font-size:13px;color:var(--muted);margin-top:10px}
+.count{font-size:13px;color:var(--muted)}
+
+/* practice */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{background:var(--soft);border-radius:12px;padding:8px 10px;text-align:center}
+.stat b{display:block;font-size:20px;font-variant-numeric:tabular-nums;line-height:1.3}
+.stat span{font-size:12px;color:var(--muted)}
+.bar{height:4px;background:var(--soft);border-radius:4px;margin-top:14px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.target{font-family:"Noto Serif JP","Hiragino Mincho ProN",serif;font-size:26px;line-height:1.9;margin:22px 2px 6px;word-break:break-all;min-height:50px}
+.target span{transition:color .08s}
+.target .p{color:var(--pending)}
+.target .o{color:var(--ok)}
+.target .x{color:var(--bad);background:var(--bad-bg);border-radius:3px}
+.target .c{color:var(--ink);box-shadow:inset 0 -2px 0 var(--cursor)}
+.target .w{color:var(--muted)}
+.next{font-size:14px;color:var(--pending);min-height:22px;margin:0 2px 14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.next::before{content:"下一句　";color:var(--muted)}
+#inp{font-size:20px;min-height:64px;resize:none;line-height:1.6}
+.msg{font-size:13px;min-height:20px;margin-top:6px;color:var(--muted)}
+.msg.bad{color:var(--bad)}
+.flash{animation:flash .35s}
+@keyframes flash{0%{background:var(--soft)}100%{background:transparent}}
+
+/* result */
+.big{font-size:42px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.res .stat b{font-size:24px}
+@media (max-width:520px){
+  .wrap{padding:18px 12px 40px}
+  .target{font-size:22px}
+  .stat b{font-size:17px}
+  .stats{gap:6px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>日语文章打字练习</h1>
+    <p>贴入任何日语文章，用你自己的输入法逐句打出来。电脑罗马字、手机 flick 都可以。</p>
+  </header>
+
+  <!-- setup -->
+  <section id="setup" class="card">
+    <textarea id="src" placeholder="在这里粘贴日语文章（新闻、小说、歌词、自己的笔记都可以）…"></textarea>
+    <div class="row space">
+      <div class="row" style="margin:0">
+        <label class="filebtn">上传 .txt 文件<input id="file" type="file" accept=".txt,text/plain"></label>
+        <button class="ghost" id="sample">放一段示例</button>
+        <button class="ghost" id="clear">清空</button>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="opts">
+      <label>分句方式
+        <select id="mode">
+          <option value="sentence">按句子（。！？）</option>
+          <option value="line">按行 / 段落</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="nopunct"> 不用打标点</label>
+      <label><input type="checkbox" id="nospace" checked> 忽略空格</label>
+      <label>每句重复
+        <select id="reps">
+          <option value="1">1 遍</option>
+          <option value="2">2 遍</option>
+          <option value="3">3 遍</option>
+          <option value="5">5 遍</option>
+        </select>
+      </label>
+    </div>
+    <div class="row">
+      <button class="primary" id="start">开始练习</button>
+      <button id="resume" class="hidden"></button>
+    </div>
+    <div class="hint">打完一句会自动跳到下一句；全角/半角、英文大小写不算错。文章只保存在你自己的浏览器里。</div>
+  </section>
+
+  <!-- practice -->
+  <section id="practice" class="card hidden">
+    <div class="stats">
+      <div class="stat"><b id="sProg">0/0</b><span>进度</span></div>
+      <div class="stat"><b id="sSpeed">0</b><span>字/分钟</span></div>
+      <div class="stat"><b id="sAcc">100%</b><span>正确率</span></div>
+      <div class="stat"><b id="sTime">0:00</b><span>用时</span></div>
+    </div>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="target" id="target"></div>
+    <div class="next" id="next"></div>
+    <textarea id="inp" rows="2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="在这里打字…"></textarea>
+    <div class="msg" id="msg"></div>
+    <div class="row space">
+      <div class="row" style="margin:0">
+        <button id="prev">上一句</button>
+        <button id="redo">重打</button>
+        <button id="skip">跳过</button>
+      </div>
+      <button class="ghost" id="back">换文章</button>
+    </div>
+  </section>
+
+  <!-- result -->
+  <section id="result" class="card hidden">
+    <div style="color:var(--muted);font-size:14px">全部打完了 🎉</div>
+    <div class="big" id="rSpeed">0 字/分钟</div>
+    <div class="res">
+      <div class="stat"><b id="rChars">0</b><span>打了多少字</span></div>
+      <div class="stat"><b id="rAcc">0%</b><span>正确率</span></div>
+      <div class="stat"><b id="rTime">0:00</b><span>用时</span></div>
+    </div>
+    <div class="row">
+      <button class="primary" id="drill">只重练打错的句子</button>
+      <button id="again">同一篇再来一次</button>
+      <button id="newtext">换一篇文章</button>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+const $ = id => document.getElementById(id);
+const KEY = 'jp-typing-practice-v1';
+const SAMPLE = `毎朝、駅まで歩く途中に小さなパン屋があります。店の前を通ると、焼きたてのパンのいい香りがして、つい足を止めてしまいます。
+今日は思い切って中に入り、メロンパンを一つ買いました。外はさくさく、中はふわふわで、とてもおいしかったです。
+店員さんに「また来てくださいね」と言われて、少しうれしくなりました。明日は別のパンも試してみようと思います。`;
+// ー (long vowel) is deliberately NOT treated as punctuation
+const PUNCT = /[、。，．,.・「」『』【】〔〕［］\[\]（）()！？!?：:；;…‥―—"'“”‘’《》〈〉]/g;
+
+let S = {text:'', mode:'sentence', nopunct:false, nospace:true, reps:1, idx:0};
+let segs = [], tgt = [], tgtN = [];
+let errSet = new Set(), segErr = 0, rep = 1;
+let log = [];               // {chars, errs} per finished attempt
+let finished = new Set();   // segment indexes fully done
+let wrong = new Set();      // segment texts with any mistake
+let activeMs = 0, lastT = 0;
+let composing = false, preLen = 0, advancing = false, tick = null;
+
+function load(){ try{ const s = JSON.parse(localStorage.getItem(KEY)||'null'); if(s) S = Object.assign(S, s); }catch(e){} }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+/* ---------- text processing ---------- */
+function normc(c){
+  let n = c.normalize('NFKC').toLowerCase();
+  if(n === '〜' || n === '～') n = '~';
+  if(n === '−' || n === '‐') n = '-';
+  return n;
+}
+function chunk(s, max){
+  if([...s].length <= max) return [s];
+  const pieces = s.match(/[^、，,]+[、，,]*/g) || [s];
+  const out = []; let cur = '';
+  for(const p of pieces){
+    if([...cur].length + [...p].length > max && cur){ out.push(cur); cur = ''; }
+    cur += p;
+    while([...cur].length > max*1.4){ const a=[...cur]; out.push(a.slice(0,max).join('')); cur = a.slice(max).join(''); }
+  }
+  if(cur) out.push(cur);
+  return out;
+}
+function segment(text, mode){
+  const lines = text.replace(/\r\n?/g,'\n').split('\n')
+    .map(s => s.replace(/[ \t　]+/g,' ').trim()).filter(Boolean);
+  const out = [];
+  if(mode === 'line'){ for(const l of lines) out.push(...chunk(l, 90)); }
+  else{
+    for(const l of lines){
+      const parts = l.match(/[^。！？!?]*[。！？!?]+[」』）)】]*|[^。！？!?]+$/g) || [l];
+      for(let p of parts){ p = p.trim(); if(p) out.push(...chunk(p, 60)); }
+    }
+  }
+  return out;
+}
+function clean(s){
+  s = s.replace(/\n/g,'');
+  if(S.nopunct) s = s.replace(PUNCT,'');
+  if(S.nospace) s = s.replace(/[ 　]/g,'');
+  return s;
+}
+
+/* ---------- setup view ---------- */
+function updateCount(){
+  const t = $('src').value;
+  if(!t.trim()){ $('count').textContent=''; return; }
+  const n = [...t.replace(/\s/g,'')].length;
+  const k = segment(t, $('mode').value).length;
+  $('count').textContent = `${n} 字 · ${k} 句`;
+}
+$('src').addEventListener('input', updateCount);
+$('mode').addEventListener('change', updateCount);
+$('sample').onclick = () => { $('src').value = SAMPLE; updateCount(); refreshResume(); };
+$('clear').onclick = () => { $('src').value = ''; updateCount(); refreshResume(); $('src').focus(); };
+$('file').addEventListener('change', e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => { $('src').value = String(r.result); updateCount(); refreshResume(); };
+  r.readAsText(f, 'utf-8');
+  e.target.value = '';
+});
+
+function show(id){ for(const s of ['setup','practice','result']) $(s).classList.toggle('hidden', s!==id); window.scrollTo(0,0); }
+
+function readOpts(){
+  S.text = $('src').value; S.mode = $('mode').value;
+  S.nopunct = $('nopunct').checked; S.nospace = $('nospace').checked;
+  S.reps = +$('reps').value || 1;
+}
+function begin(fromIdx, custom){
+  readOpts();
+  segs = custom || segment(S.text, S.mode).map(s => clean(s).trim()).filter(Boolean);
+  if(!segs.length){ $('src').focus(); $('src').placeholder = '先贴一段日语文章进来～'; return; }
+  S.idx = custom ? 0 : Math.min(fromIdx||0, segs.length-1);
+  log = []; finished = new Set(); wrong = new Set();
+  activeMs = 0; lastT = 0;
+  save(); show('practice'); rep = 1; loadSeg();
+  clearInterval(tick); tick = setInterval(updStats, 500);
+}
+$('start').onclick = () => begin(0);
+$('resume').onclick = () => begin(S.idx);
+
+/* ---------- practice ---------- */
+function loadSeg(){
+  tgt = [...segs[S.idx]];
+  tgtN = tgt.map(normc);
+  errSet = new Set(); segErr = 0; advancing = false; preLen = 0;
+  $('inp').value = '';
+  const nx = rep < S.reps ? segs[S.idx] : segs[S.idx+1];
+  $('next').textContent = nx || '';
+  $('next').style.visibility = nx ? 'visible' : 'hidden';
+  $('prev').disabled = S.idx === 0;
+  setMsg(S.reps > 1 ? `第 ${rep} / ${S.reps} 遍` : '');
+  render(0, []);
+  updStats();
+  $('inp').focus();
+  save();
+}
+function setMsg(t, bad){ const m=$('msg'); m.textContent=t; m.className = bad ? 'msg bad' : 'msg'; }
+function render(judgeLen, vN){
+  const box = $('target'); box.textContent = '';
+  const frag = document.createDocumentFragment();
+  for(let i=0;i<tgt.length;i++){
+    const sp = document.createElement('span'); sp.textContent = tgt[i];
+    if(i < judgeLen) sp.className = (vN[i] === tgtN[i]) ? 'o' : 'x';
+    else if(i < vN.length) sp.className = 'w';      // still being composed by the IME
+    else if(i === judgeLen) sp.className = 'c';
+    else sp.className = 'p';
+    frag.appendChild(sp);
+  }
+  box.appendChild(frag);
+}
+function stamp(){
+  const now = performance.now();
+  if(lastT) activeMs += Math.min(now - lastT, 5000);   // pauses longer than 5s don't count
+  lastT = now;
+}
+function handle(commit){
+  if(advancing) return;
+  const vN = [...clean($('inp').value)].map(normc);
+  if(!commit){ render(Math.min(preLen, tgt.length), vN); return; }
+  for(let i=0;i<Math.min(vN.length,tgt.length);i++){
+    if(vN[i] !== tgtN[i] && !errSet.has(i)){ errSet.add(i); segErr++; }
+  }
+  render(Math.min(vN.length, tgt.length), vN);
+  const extra = vN.length - tgt.length;
+  if(extra > 0) setMsg(`多打了 ${extra} 个字`, true);
+  else setMsg(S.reps > 1 ? `第 ${rep} / ${S.reps} 遍` : '');
+  if(vN.length === tgt.length && vN.every((c,i)=>c===tgtN[i])) complete();
+}
+function complete(){
+  advancing = true;
+  log.push({chars: tgt.length, errs: segErr});
+  if(segErr > 0) wrong.add(segs[S.idx]);
+  $('target').classList.remove('flash'); void $('target').offsetWidth; $('target').classList.add('flash');
+  setTimeout(() => {
+    if(rep < S.reps){ rep++; loadSeg(); return; }
+    finished.add(S.idx);
+    rep = 1;
+    if(S.idx >= segs.length-1){ finish(); return; }
+    S.idx++; loadSeg();
+  }, 160);
+}
+function totals(){
+  let chars=0, errs=0;
+  for(const d of log){ chars+=d.chars; errs+=d.errs; }
+  return {chars, errs};
+}
+function fmt(ms){ const s=Math.floor(ms/1000); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+function acc(t){ return t.chars ? Math.max(0, Math.round((t.chars - t.errs)/t.chars*100)) + '%' : '–'; }
+function updStats(){
+  const t = totals(), min = activeMs/60000;
+  $('sProg').textContent = `${finished.size}/${segs.length}`;
+  $('bar').style.width = (segs.length ? finished.size/segs.length*100 : 0) + '%';
+  $('sSpeed').textContent = (min > 0.05 && t.chars) ? Math.round(t.chars/min) : '–';
+  $('sAcc').textContent = acc(t);
+  $('sTime').textContent = fmt(activeMs);
+}
+function finish(){
+  clearInterval(tick);
+  const t = totals(), min = activeMs/60000;
+  $('rSpeed').textContent = (min>0 && t.chars ? Math.round(t.chars/min) : 0) + ' 字/分钟';
+  $('rChars').textContent = t.chars;
+  $('rAcc').textContent = acc(t);
+  $('rTime').textContent = fmt(activeMs);
+  const d = $('drill');
+  d.textContent = wrong.size ? `只重练打错的 ${wrong.size} 句` : '没有打错的句子 👍';
+  d.disabled = !wrong.size;
+  d.classList.toggle('primary', !!wrong.size);
+  $('again').classList.toggle('primary', !wrong.size);
+  S.idx = 0; save();
+  show('result');
+}
+
+const inp = $('inp');
+inp.addEventListener('compositionstart', () => { composing = true; preLen = [...clean(inp.value)].length; });
+inp.addEventListener('compositionend', () => { composing = false; setTimeout(()=>handle(true), 0); });
+inp.addEventListener('input', e => {
+  stamp();
+  if(composing || e.isComposing) handle(false); else handle(true);
+});
+inp.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && !e.isComposing && e.keyCode !== 229){ e.preventDefault(); if(!composing) handle(true); }
+});
+$('prev').onclick = () => { if(S.idx>0){ S.idx--; rep = 1; loadSeg(); } };
+$('redo').onclick = () => { loadSeg(); };
+$('skip').onclick = () => { rep = 1; if(S.idx >= segs.length-1) finish(); else { S.idx++; loadSeg(); } };
+$('back').onclick = () => { clearInterval(tick); show('setup'); refreshResume(); };
+$('again').onclick = () => begin(0);
+$('drill').onclick = () => { if(wrong.size) begin(0, [...wrong]); };
+$('newtext').onclick = () => { S.idx=0; save(); show('setup'); refreshResume(); $('src').select(); };
+
+function refreshResume(){
+  const b = $('resume');
+  if(S.text && S.idx > 0 && $('src').value === S.text){
+    b.textContent = `从上次的第 ${S.idx+1} 句继续`; b.classList.remove('hidden');
+  } else b.classList.add('hidden');
+}
+$('src').addEventListener('input', refreshResume);
+
+/* init */
+load();
+$('src').value = S.text || '';
+$('mode').value = S.mode; $('nopunct').checked = S.nopunct; $('nospace').checked = S.nospace;
+$('reps').value = String(S.reps||1);
+updateCount(); refreshResume();
+})();
+</script>
+</body>
+</html>
