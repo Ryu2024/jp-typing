@@ -11,12 +11,12 @@
 :root{
   --bg:#f6f2ea;--card:#fffdf8;--ink:#2a2521;--muted:#857b70;--line:#e5ddd0;
   --ok:#2c7a57;--bad:#c2410c;--bad-bg:#fde4d6;--accent:#b4462f;--accent-ink:#fff;
-  --pending:#b3a99d;--cursor:#b4462f;--soft:#efe8dc;
+  --pending:#b3a99d;--cursor:#b4462f;--soft:#efe8dc;--hint:#f3ece0;
 }
 @media (prefers-color-scheme:dark){:root{
   --bg:#1a1815;--card:#23201c;--ink:#efe9df;--muted:#9b9187;--line:#38322b;
   --ok:#6cc59a;--bad:#ff8f63;--bad-bg:#4b2516;--accent:#e07a60;--accent-ink:#1a1815;
-  --pending:#6a6259;--cursor:#e07a60;--soft:#2c2823;
+  --pending:#6a6259;--cursor:#e07a60;--soft:#2c2823;--hint:#2a2622;
 }}
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -35,13 +35,14 @@ button,.filebtn{font:inherit;font-size:15px;padding:9px 16px;border-radius:10px;
 button:hover,.filebtn:hover{border-color:var(--muted)}
 button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
 button.ghost{border-color:transparent;background:transparent;color:var(--muted);padding:9px 10px}
+button.on{border-color:var(--accent);color:var(--accent)}
 button:disabled{opacity:.4;cursor:default}
 .filebtn input{display:none}
 .opts{display:flex;flex-wrap:wrap;gap:14px 20px;margin-top:14px;font-size:14px;color:var(--muted)}
 .opts label{display:flex;align-items:center;gap:6px;cursor:pointer}
-select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
-.hint{font-size:13px;color:var(--muted);margin-top:10px}
-.count{font-size:13px;color:var(--muted)}
+.opts.ime{padding-top:14px;border-top:1px dashed var(--line)}
+select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);max-width:100%}
+.note{font-size:13px;color:var(--muted);margin-top:10px}
 
 /* practice */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
@@ -51,19 +52,38 @@ select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px 
 .bar{height:4px;background:var(--soft);border-radius:4px;margin-top:14px;overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
 .target{font-family:"Noto Serif JP","Hiragino Mincho ProN",serif;font-size:26px;line-height:1.9;margin:22px 2px 6px;word-break:break-all;min-height:50px}
+.target.ruby{line-height:2.3}
+.target rt{font-family:"Zen Kaku Gothic New",sans-serif;font-size:12px;color:var(--muted);letter-spacing:.02em}
 .target span{transition:color .08s}
 .target .p{color:var(--pending)}
 .target .o{color:var(--ok)}
 .target .x{color:var(--bad);background:var(--bad-bg);border-radius:3px}
 .target .c{color:var(--ink);box-shadow:inset 0 -2px 0 var(--cursor)}
 .target .w{color:var(--muted)}
-.next{font-size:14px;color:var(--pending);min-height:22px;margin:0 2px 14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.next{font-size:14px;color:var(--pending);min-height:22px;margin:0 2px 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .next::before{content:"下一句　";color:var(--muted)}
 #inp{font-size:20px;min-height:64px;resize:none;line-height:1.6}
 .msg{font-size:13px;min-height:20px;margin-top:6px;color:var(--muted)}
 .msg.bad{color:var(--bad)}
 .flash{animation:flash .35s}
 @keyframes flash{0%{background:var(--soft)}100%{background:transparent}}
+
+/* hint box */
+.hint{background:var(--hint);border-radius:12px;padding:10px 12px;margin:0 0 12px;font-size:14px}
+.hint .head{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.hint .word{font-size:17px;font-weight:700}
+.hint .read{color:var(--muted)}
+.hint .conv{font-size:13px;color:var(--accent)}
+.hint .units{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.hint .u{display:flex;flex-direction:column;align-items:center;min-width:38px;padding:4px 8px 5px;border-radius:9px;background:var(--card);border:1px solid var(--line);line-height:1.3}
+.hint .u i{font-style:normal;font-size:13px;color:var(--muted)}
+.hint .u b{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:16px;font-weight:600;white-space:nowrap}
+.hint .u b u{text-decoration:none;color:var(--ok)}
+.hint .u.done{opacity:.35}
+.hint .u.cur{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.hint .after{margin-top:8px;font-size:13px;color:var(--muted)}
+.hint .after b{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:600;color:var(--ink)}
+.hint .legend{margin-top:6px;font-size:12px;color:var(--muted)}
 
 /* result */
 .big{font-size:42px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
@@ -74,6 +94,8 @@ select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px 
   .target{font-size:22px}
   .stat b{font-size:17px}
   .stats{gap:6px}
+  .hint .u{min-width:34px;padding:3px 6px 4px}
+  .hint .u b{font-size:15px}
 }
 </style>
 </head>
@@ -93,7 +115,7 @@ select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px 
         <button class="ghost" id="sample">放一段示例</button>
         <button class="ghost" id="clear">清空</button>
       </div>
-      <span class="count" id="count"></span>
+      <span class="note" id="count" style="margin:0"></span>
     </div>
     <div class="opts">
       <label>分句方式
@@ -113,11 +135,22 @@ select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px 
         </select>
       </label>
     </div>
+    <div class="opts ime">
+      <label>我的输入法
+        <select id="ime">
+          <option value="romaji">罗马字输入（电脑 / 手机全键盘）</option>
+          <option value="flick">手机 flick（12 键假名）</option>
+          <option value="kana">电脑假名输入（JIS かな配列）</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="hint"> 显示按键提示和读音</label>
+    </div>
     <div class="row">
       <button class="primary" id="start">开始练习</button>
       <button id="resume" class="hidden"></button>
     </div>
-    <div class="hint">打完一句会自动跳到下一句；全角/半角、英文大小写不算错。文章只保存在你自己的浏览器里。</div>
+    <div class="note">打完一句会自动跳到下一句；全角/半角、英文大小写不算错。文章只保存在你自己的浏览器里。<br>
+      按键提示第一次使用时需要下载约 18MB 的读音词典，之后浏览器会缓存。汉字读音由词典自动判断，偶尔会不准。</div>
   </section>
 
   <!-- practice -->
@@ -131,6 +164,7 @@ select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px 
     <div class="bar"><i id="bar"></i></div>
     <div class="target" id="target"></div>
     <div class="next" id="next"></div>
+    <div class="hint hidden" id="hintBox"></div>
     <textarea id="inp" rows="2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="在这里打字…"></textarea>
     <div class="msg" id="msg"></div>
     <div class="row space">
@@ -138,8 +172,9 @@ select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px 
         <button id="prev">上一句</button>
         <button id="redo">重打</button>
         <button id="skip">跳过</button>
+        <button id="hintBtn">提示</button>
       </div>
-      <button class="ghost" id="back">换文章</button>
+      <button class="ghost" id="back">换文章 / 设置</button>
     </div>
   </section>
 
@@ -170,7 +205,7 @@ const SAMPLE = `毎朝、駅まで歩く途中に小さなパン屋がありま�
 // ー (long vowel) is deliberately NOT treated as punctuation
 const PUNCT = /[、。，．,.・「」『』【】〔〕［］\[\]（）()！？!?：:；;…‥―—"'“”‘’《》〈〉]/g;
 
-let S = {text:'', mode:'sentence', nopunct:false, nospace:true, reps:1, idx:0};
+let S = {text:'', mode:'sentence', nopunct:false, nospace:true, reps:1, idx:0, ime:'romaji', hint:false};
 let segs = [], tgt = [], tgtN = [];
 let errSet = new Set(), segErr = 0, rep = 1;
 let log = [];               // {chars, errs} per finished attempt
@@ -178,11 +213,165 @@ let finished = new Set();   // segment indexes fully done
 let wrong = new Set();      // segment texts with any mistake
 let activeMs = 0, lastT = 0;
 let composing = false, preLen = 0, advancing = false, tick = null;
+let lastJudge = 0, lastVN = [];
 
 function load(){ try{ const s = JSON.parse(localStorage.getItem(KEY)||'null'); if(s) S = Object.assign(S, s); }catch(e){} }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 
-/* ---------- text processing ---------- */
+/* =========================================================
+   Kana / key tables
+   ========================================================= */
+const kata2hira = s => s.replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));
+const isKanji = c => /[㐀-䶿一-鿿豈-﫿々〆ヶ]/.test(c);
+const hasKanji = s => [...s].some(isKanji);
+const isKanaStr = s => /^[ぁ-ゖ゛-ゟー]+$/.test(s);
+
+const R1 = {};
+(function(){
+  const rows = {
+    a:'あいうえお', k:'かきくけこ', s:'さしすせそ', t:'たちつてと', n:'なにぬねの', h:'はひふへほ',
+    m:'まみむめも', r:'らりるれろ', g:'がぎぐげご', z:'ざじずぜぞ', d:'だぢづでど', b:'ばびぶべぼ', p:'ぱぴぷぺぽ'
+  };
+  const v = ['a','i','u','e','o'];
+  for(const [c,row] of Object.entries(rows)) [...row].forEach((k,i)=>{ R1[k] = (c==='a'?'':c) + v[i]; });
+  Object.assign(R1, {し:'shi',ち:'chi',つ:'tsu',ふ:'fu',じ:'ji',ぢ:'di',づ:'du',
+    や:'ya',ゆ:'yu',よ:'yo',わ:'wa',を:'wo',ん:'nn',ゔ:'vu',
+    ぁ:'la',ぃ:'li',ぅ:'lu',ぇ:'le',ぉ:'lo',ゃ:'lya',ゅ:'lyu',ょ:'lyo',ゎ:'lwa',ゕ:'lka',ゖ:'lke',
+    'ー':'-','、':',','。':'.','・':'/','「':'[','」':']','〜':'~','～':'~','！':'!','？':'?','（':'(','）':')','：':':','；':';','　':' '});
+})();
+const YOON = {'しゃ':'sha','しゅ':'shu','しぇ':'she','しょ':'sho','ちゃ':'cha','ちゅ':'chu','ちぇ':'che','ちょ':'cho',
+  'じゃ':'ja','じゅ':'ju','じぇ':'je','じょ':'jo','ぢゃ':'dya','ぢゅ':'dyu','ぢょ':'dyo',
+  'ふぁ':'fa','ふぃ':'fi','ふぇ':'fe','ふぉ':'fo','てぃ':'thi','でぃ':'dhi','でゅ':'dhu','とぅ':'twu','どぅ':'dwu',
+  'うぃ':'wi','うぇ':'we','うぉ':'who','ゔぁ':'va','ゔぃ':'vi','ゔぇ':'ve','ゔぉ':'vo',
+  'つぁ':'tsa','つぃ':'tsi','つぇ':'tse','つぉ':'tso','いぇ':'ye','きぇ':'kye','ぎぇ':'gye'};
+
+/* flick: key + direction (+ 小゛゜ presses) */
+const FLICK = {};
+(function(){
+  const D = ['','←','↑','→','↓'];
+  const keys = {あ:'あいうえお',か:'かきくけこ',さ:'さしすせそ',た:'たちつてと',な:'なにぬねの',は:'はひふへほ',
+    ま:'まみむめも',や:'や「ゆ」よ',ら:'らりるれろ',わ:'わをんー','、':'、。？！'};
+  for(const [k,row] of Object.entries(keys)) [...row].forEach((c,i)=>{ if(!(c in FLICK)) FLICK[c] = {key:k, dir:D[i], mod:0}; });
+  const add = (pairs, mod) => pairs.split(' ').forEach(p => { const [b,c] = [...p]; FLICK[c] = Object.assign({}, FLICK[b], {mod}); });
+  add('かが きぎ くぐ けげ こご さざ しじ すず せぜ そぞ ただ ちぢ てで とど はば ひび ふぶ へべ ほぼ', 1);
+  add('はぱ ひぴ ふぷ へぺ ほぽ つづ うゔ', 2);
+  add('あぁ いぃ うぅ えぇ おぉ やゃ ゆゅ よょ わゎ つっ', 1);
+  FLICK['?'] = FLICK['？']; FLICK['!'] = FLICK['！'];
+})();
+function flickStr(c){
+  const f = FLICK[c];
+  if(!f) return /[ -~]/.test(c) ? c : '?';
+  let s = f.key + (f.dir || '');
+  if(f.mod) s += '+小' + (f.mod > 1 ? '×' + f.mod : '');
+  return s;
+}
+
+/* JIS kana input */
+const JIS = {};
+(function(){
+  const plain = {ぬ:'1',ふ:'2',あ:'3',う:'4',え:'5',お:'6',や:'7',ゆ:'8',よ:'9',わ:'0',ほ:'-',へ:'^',ー:'¥',
+    た:'Q',て:'W',い:'E',す:'R',か:'T',ん:'Y',な:'U',に:'I',ら:'O',せ:'P',
+    ち:'A',と:'S',し:'D',は:'F',き:'G',く:'H',ま:'J',の:'K',り:'L',れ:';',け:':',む:']',
+    つ:'Z',さ:'X',そ:'C',ひ:'V',こ:'B',み:'N',も:'M',ね:',',る:'.',め:'/',ろ:'\\'};
+  const shift = {ぁ:'3',ぃ:'E',ぅ:'4',ぇ:'5',ぉ:'6',ゃ:'7',ゅ:'8',ょ:'9',を:'0',っ:'Z','、':',','。':'.','・':'/','「':'[','」':']'};
+  for(const [c,k] of Object.entries(plain)) JIS[c] = k;
+  for(const [c,k] of Object.entries(shift)) JIS[c] = '⇧' + k;
+  const dk = 'かが きぎ くぐ けげ こご さざ しじ すず せぜ そぞ ただ ちぢ つづ てで とど はば ひび ふぶ へべ ほぼ うゔ';
+  dk.split(' ').forEach(p => { const [b,c] = [...p]; JIS[c] = JIS[b] + '+@'; });
+  'はぱ ひぴ ふぷ へぺ ほぽ'.split(' ').forEach(p => { const [b,c] = [...p]; JIS[c] = JIS[b] + '+['; });
+})();
+function jisStr(c){ return JIS[c] || (/[ -~]/.test(c) ? c : '?'); }
+
+/* reading (hiragana) -> typing units */
+function toUnits(h){
+  const cs = [...h], out = [];
+  for(let i=0;i<cs.length;i++){
+    const c = cs[i], n = cs[i+1];
+    if(n && 'ゃゅょぁぃぅぇぉ'.includes(n)){
+      let r = YOON[c+n];
+      if(!r && 'ゃゅょ'.includes(n)){
+        const b = R1[c];
+        if(b && b.length >= 2 && b.endsWith('i')) r = b.slice(0,-1) + 'y' + {ゃ:'a',ゅ:'u',ょ:'o'}[n];
+      }
+      if(r){ out.push({k:c+n, r}); i++; continue; }
+    }
+    let r = R1[c];
+    if(r == null) r = /[ -~]/.test(c) ? c.toLowerCase() : null;
+    out.push({k:c, r});
+  }
+  for(let i=0;i<out.length;i++) if(out[i].k === 'っ'){
+    const nx = out[i+1];
+    out[i].r = (nx && nx.r && /^[bcdfghjkmpqrstvwxz]/.test(nx.r)) ? nx.r[0] : 'ltu';
+  }
+  return out;
+}
+function unitKeys(u){
+  if(S.ime === 'romaji') return u.r == null ? '?' : u.r;
+  const f = S.ime === 'flick' ? flickStr : jisStr;
+  return [...u.k].map(f).join(' ');
+}
+
+/* =========================================================
+   Tokenizer (kuromoji, loaded on demand)
+   ========================================================= */
+let tokenizer = null, tokState = 'idle';   // idle | loading | ready | error
+const tokCache = new Map();
+function ensureTokenizer(){
+  if(tokState !== 'idle') return;
+  tokState = 'loading'; refreshHint();
+  const sc = document.createElement('script');
+  sc.src = 'lib/kuromoji.js';
+  sc.onload = () => {
+    try{
+      kuromoji.builder({dicPath:'dict/'}).build((err, t) => {
+        if(err){ tokState = 'error'; console.error(err); }
+        else { tokenizer = t; tokState = 'ready'; }
+        tokCache.clear(); refreshAll();
+      });
+    }catch(e){ tokState = 'error'; console.error(e); refreshAll(); }
+  };
+  sc.onerror = () => { tokState = 'error'; refreshAll(); };
+  document.head.appendChild(sc);
+}
+function mkTok(surface, start, end, rd){
+  const sh = kata2hira(surface);
+  if(!hasKanji(surface) && isKanaStr(sh)) rd = sh;
+  else if(rd) rd = kata2hira(rd);
+  if(!rd){
+    if(/^[\x20-\x7e]+$/.test(surface.normalize('NFKC'))) rd = surface.normalize('NFKC');
+    else if([...sh].every(c => R1[c] != null)) rd = sh;
+  }
+  const t = {surface, start, end, reading: rd || null, units: rd ? toUnits(rd) : null,
+    kanji: hasKanji(surface), kata: /[ァ-ヺ]/.test(surface) && !hasKanji(surface), ruby: null};
+  if(t.kanji && rd){
+    const s = [...surface], r = [...rd];
+    let a = 0; while(a < s.length-1 && a < r.length && !isKanji(s[a]) && kata2hira(s[a]) === r[a]) a++;
+    let b = 0; while(b < s.length-a-1 && b < r.length-a && !isKanji(s[s.length-1-b]) && kata2hira(s[s.length-1-b]) === r[r.length-1-b]) b++;
+    t.ruby = {start: start+a, end: end-b, rt: r.slice(a, r.length-b).join('')};
+  }
+  t.kanaLen = t.units ? t.units.reduce((n,u)=>n+[...u.k].length, 0) : 0;
+  return t;
+}
+function tokInfo(seg){
+  if(tokCache.has(seg)) return tokCache.get(seg);
+  let toks = [];
+  if(tokenizer){
+    let pos = 0;
+    for(const t of tokenizer.tokenize(seg)){
+      const n = [...t.surface_form].length;
+      toks.push(mkTok(t.surface_form, pos, pos+n, t.reading && t.reading !== '*' ? t.reading : null));
+      pos += n;
+    }
+  } else {
+    toks = [...seg].map((c,i) => mkTok(c, i, i+1, null));
+  }
+  if(tokenizer) tokCache.set(seg, toks);
+  return toks;
+}
+
+/* =========================================================
+   Text processing
+   ========================================================= */
 function normc(c){
   let n = c.normalize('NFKC').toLowerCase();
   if(n === '〜' || n === '～') n = '~';
@@ -221,7 +410,9 @@ function clean(s){
   return s;
 }
 
-/* ---------- setup view ---------- */
+/* =========================================================
+   Setup view
+   ========================================================= */
 function updateCount(){
   const t = $('src').value;
   if(!t.trim()){ $('count').textContent=''; return; }
@@ -240,6 +431,8 @@ $('file').addEventListener('change', e => {
   r.readAsText(f, 'utf-8');
   e.target.value = '';
 });
+$('ime').addEventListener('change', () => { S.ime = $('ime').value; save(); });
+$('hint').addEventListener('change', () => { S.hint = $('hint').checked; save(); if(S.hint) ensureTokenizer(); });
 
 function show(id){ for(const s of ['setup','practice','result']) $(s).classList.toggle('hidden', s!==id); window.scrollTo(0,0); }
 
@@ -247,6 +440,7 @@ function readOpts(){
   S.text = $('src').value; S.mode = $('mode').value;
   S.nopunct = $('nopunct').checked; S.nospace = $('nospace').checked;
   S.reps = +$('reps').value || 1;
+  S.ime = $('ime').value; S.hint = $('hint').checked;
 }
 function begin(fromIdx, custom){
   readOpts();
@@ -255,17 +449,20 @@ function begin(fromIdx, custom){
   S.idx = custom ? 0 : Math.min(fromIdx||0, segs.length-1);
   log = []; finished = new Set(); wrong = new Set();
   activeMs = 0; lastT = 0;
+  if(S.hint) ensureTokenizer();
   save(); show('practice'); rep = 1; loadSeg();
   clearInterval(tick); tick = setInterval(updStats, 500);
 }
 $('start').onclick = () => begin(0);
 $('resume').onclick = () => begin(S.idx);
 
-/* ---------- practice ---------- */
+/* =========================================================
+   Practice
+   ========================================================= */
 function loadSeg(){
   tgt = [...segs[S.idx]];
   tgtN = tgt.map(normc);
-  errSet = new Set(); segErr = 0; advancing = false; preLen = 0;
+  errSet = new Set(); segErr = 0; advancing = false; preLen = 0; composing = false;
   $('inp').value = '';
   const nx = rep < S.reps ? segs[S.idx] : segs[S.idx+1];
   $('next').textContent = nx || '';
@@ -273,24 +470,115 @@ function loadSeg(){
   $('prev').disabled = S.idx === 0;
   setMsg(S.reps > 1 ? `第 ${rep} / ${S.reps} 遍` : '');
   render(0, []);
+  renderHint(0, '');
+  updHintBtn();
   updStats();
   $('inp').focus();
   save();
 }
 function setMsg(t, bad){ const m=$('msg'); m.textContent=t; m.className = bad ? 'msg bad' : 'msg'; }
 function render(judgeLen, vN){
+  lastJudge = judgeLen; lastVN = vN;
   const box = $('target'); box.textContent = '';
-  const frag = document.createDocumentFragment();
-  for(let i=0;i<tgt.length;i++){
-    const sp = document.createElement('span'); sp.textContent = tgt[i];
+  const spans = tgt.map((ch, i) => {
+    const sp = document.createElement('span'); sp.textContent = ch;
     if(i < judgeLen) sp.className = (vN[i] === tgtN[i]) ? 'o' : 'x';
     else if(i < vN.length) sp.className = 'w';      // still being composed by the IME
     else if(i === judgeLen) sp.className = 'c';
     else sp.className = 'p';
-    frag.appendChild(sp);
+    return sp;
+  });
+  const rubyAt = {};
+  const useRuby = S.hint && tokenizer;
+  if(useRuby) for(const t of tokInfo(segs[S.idx])) if(t.ruby) rubyAt[t.ruby.start] = t.ruby;
+  box.classList.toggle('ruby', !!useRuby);
+  const frag = document.createDocumentFragment();
+  for(let i=0;i<spans.length;){
+    const r = rubyAt[i];
+    if(r){
+      const rb = document.createElement('ruby');
+      for(let j=r.start;j<r.end;j++) rb.appendChild(spans[j]);
+      const rt = document.createElement('rt'); rt.textContent = r.rt; rb.appendChild(rt);
+      frag.appendChild(rb); i = r.end;
+    } else { frag.appendChild(spans[i]); i++; }
   }
   box.appendChild(frag);
 }
+
+/* ---------- hint ---------- */
+let lastBase = 0, lastComp = '';
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function convNote(t){
+  if(t.kanji) return S.ime === 'flick' ? `打完读音后在候选里选「${t.surface}」` : `打完读音后按空格，选出「${t.surface}」`;
+  if(t.kata) return S.ime === 'flick' ? `打完后在候选里选片假名「${t.surface}」` : `打完后按空格（或 F7）变成「${t.surface}」`;
+  return '';
+}
+function legend(){
+  if(S.ime === 'flick') return '←↑→↓ = 往哪个方向滑，没箭头 = 直接点；「+小」= 再按一下 小゛゜ 键（×2 = 按两下）。';
+  if(S.ime === 'kana') return '⇧ = 按住 Shift；「+@」= 再按 @ 键加浊点，「+[」= 再按 [ 键加半浊点。';
+  return 'ん 统一按 nn；っ 按下一个字母两次，单独的 っ 按 ltu。';
+}
+function renderHint(base, comp){
+  lastBase = base; lastComp = comp;
+  const box = $('hintBox');
+  if(!S.hint){ box.classList.add('hidden'); return; }
+  box.classList.remove('hidden');
+  if(tokState === 'loading' || tokState === 'idle'){
+    box.innerHTML = '<div class="read">正在加载读音词典…（第一次约 18MB，之后会缓存）</div>'; return;
+  }
+  const toks = tokInfo(segs[S.idx]);
+  let i = toks.findIndex(t => t.end > base);
+  if(i < 0){ box.innerHTML = '<div class="read">这句已经打完了，按回车确定。</div>'; return; }
+
+  const cn = [...(comp||'')].map(normc).join('');
+  const m = cn.match(/[a-z]+$/);
+  const pend = m ? m[0] : '';
+  let k = [...kata2hira(pend ? cn.slice(0, -pend.length) : cn)].length;
+  while(i < toks.length-1 && toks[i].units && toks[i].kanaLen > 0 && (k > toks[i].kanaLen || (k === toks[i].kanaLen && pend))){ k -= toks[i].kanaLen; i++; }
+  const t = toks[i];
+
+  let html = '';
+  const err = tokState === 'error' ? '<div class="conv">读音词典没加载成功，汉字的读音暂时没法提示。</div>' : '';
+  if(!t.units){
+    html = `<div class="head"><span class="word">${esc(t.surface)}</span><span class="read">这个词没有读音数据</span></div>`;
+  } else {
+    const showRead = t.reading && t.reading !== t.surface;
+    html = `<div class="head"><span class="word">${esc(t.surface)}</span>` +
+      (showRead ? `<span class="read">${esc(t.reading)}</span>` : '') +
+      (convNote(t) ? `<span class="conv">${esc(convNote(t))}</span>` : '') + '</div><div class="units">';
+    let cum = 0, curSet = false;
+    for(const u of t.units){
+      const len = [...u.k].length;
+      let cls = '';
+      let keys = esc(unitKeys(u));
+      if(cum + len <= k) cls = 'done';
+      else if(!curSet){
+        cls = 'cur'; curSet = true;
+        if(S.ime === 'romaji' && pend && u.r && u.r.startsWith(pend)) keys = `<u>${esc(pend)}</u>${esc(u.r.slice(pend.length))}`;
+      }
+      cum += len;
+      html += `<span class="u ${cls}"><i>${esc(u.k)}</i><b>${keys}</b></span>`;
+    }
+    html += '</div>';
+  }
+  const nt = toks[i+1];
+  if(nt) html += `<div class="after">接着：${esc(nt.surface)}${nt.reading && nt.reading !== nt.surface ? '（' + esc(nt.reading) + '）' : ''}` +
+    (nt.units ? ` → <b>${esc(nt.units.map(unitKeys).join(S.ime === 'romaji' ? '' : ' · '))}</b>` : '') + '</div>';
+  html += `<div class="legend">${esc(legend())}</div>`;
+  box.innerHTML = err + html;
+}
+function refreshHint(){ if(!$('practice').classList.contains('hidden') && segs.length) renderHint(lastBase, lastComp); }
+function refreshAll(){
+  if($('practice').classList.contains('hidden') || !segs.length) return;
+  render(lastJudge, lastVN); renderHint(lastBase, lastComp);
+}
+function updHintBtn(){ const b = $('hintBtn'); b.textContent = S.hint ? '提示：开' : '提示：关'; b.classList.toggle('on', S.hint); }
+$('hintBtn').onclick = () => {
+  S.hint = !S.hint; $('hint').checked = S.hint; save(); updHintBtn();
+  if(S.hint) ensureTokenizer();
+  refreshAll(); $('inp').focus();
+};
+
 function stamp(){
   const now = performance.now();
   if(lastT) activeMs += Math.min(now - lastT, 5000);   // pauses longer than 5s don't count
@@ -298,12 +586,20 @@ function stamp(){
 }
 function handle(commit){
   if(advancing) return;
-  const vN = [...clean($('inp').value)].map(normc);
-  if(!commit){ render(Math.min(preLen, tgt.length), vN); return; }
+  const v = [...clean($('inp').value)];
+  const vN = v.map(normc);
+  if(!commit){
+    const base = Math.min(preLen, tgt.length);
+    render(base, vN);
+    renderHint(base, v.slice(preLen).join(''));
+    return;
+  }
   for(let i=0;i<Math.min(vN.length,tgt.length);i++){
     if(vN[i] !== tgtN[i] && !errSet.has(i)){ errSet.add(i); segErr++; }
   }
-  render(Math.min(vN.length, tgt.length), vN);
+  const base = Math.min(vN.length, tgt.length);
+  render(base, vN);
+  renderHint(base, '');
   const extra = vN.length - tgt.length;
   if(extra > 0) setMsg(`多打了 ${extra} 个字`, true);
   else setMsg(S.reps > 1 ? `第 ${rep} / ${S.reps} 遍` : '');
@@ -355,6 +651,7 @@ function finish(){
 
 const inp = $('inp');
 inp.addEventListener('compositionstart', () => { composing = true; preLen = [...clean(inp.value)].length; });
+inp.addEventListener('compositionupdate', () => { setTimeout(()=>{ if(composing) handle(false); }, 0); });
 inp.addEventListener('compositionend', () => { composing = false; setTimeout(()=>handle(true), 0); });
 inp.addEventListener('input', e => {
   stamp();
@@ -384,6 +681,7 @@ load();
 $('src').value = S.text || '';
 $('mode').value = S.mode; $('nopunct').checked = S.nopunct; $('nospace').checked = S.nospace;
 $('reps').value = String(S.reps||1);
+$('ime').value = S.ime || 'romaji'; $('hint').checked = !!S.hint;
 updateCount(); refreshResume();
 })();
 </script>
