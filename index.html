@@ -12,11 +12,13 @@
   --bg:#f6f2ea;--card:#fffdf8;--ink:#2a2521;--muted:#857b70;--line:#e5ddd0;
   --ok:#2c7a57;--bad:#c2410c;--bad-bg:#fde4d6;--accent:#b4462f;--accent-ink:#fff;
   --pending:#b3a99d;--cursor:#b4462f;--soft:#efe8dc;--hint:#f3ece0;
+  --kb-hl:#2f8fe0;--f1:#f6dfe4;--f2:#e3e4f6;--f3:#dcecf6;--f4:#e1f2e6;
 }
 @media (prefers-color-scheme:dark){:root{
   --bg:#1a1815;--card:#23201c;--ink:#efe9df;--muted:#9b9187;--line:#38322b;
   --ok:#6cc59a;--bad:#ff8f63;--bad-bg:#4b2516;--accent:#e07a60;--accent-ink:#1a1815;
   --pending:#6a6259;--cursor:#e07a60;--soft:#2c2823;--hint:#2a2622;
+  --kb-hl:#3d9be9;--f1:#3d2a2e;--f2:#2d2e3f;--f3:#26333d;--f4:#28382d;
 }}
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -84,6 +86,34 @@ select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px 
 .hint .after{margin-top:8px;font-size:13px;color:var(--muted)}
 .hint .after b{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:600;color:var(--ink)}
 .hint .legend{margin-top:6px;font-size:12px;color:var(--muted)}
+.hint .nk{margin-top:10px;font-size:15px}
+.hint .nk kbd{display:inline-block;min-width:24px;text-align:center;padding:1px 7px;border-radius:6px;background:var(--kb-hl);color:#fff;font-family:inherit;font-weight:700;font-size:14px}
+.hint .nk .fn{margin-left:8px;font-size:12px;color:var(--muted)}
+/* physical keyboard */
+.kb{display:flex;flex-direction:column;gap:4px;margin-top:8px;user-select:none}
+.kr{display:flex;gap:4px}
+.k{flex:var(--w,1) 1 0;min-width:0;height:36px;border-radius:6px;border:1px solid var(--line);background:var(--card);position:relative;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink);transition:background .1s,transform .1s}
+.k em{font-style:normal;font-weight:600}
+.k s{position:absolute;top:1px;left:4px;font-size:9px;color:var(--muted);text-decoration:none}
+.k sub{position:absolute;bottom:1px;right:4px;font-size:10px;color:var(--muted)}
+.k.blank{visibility:hidden}
+.f-lp,.f-rp{background:var(--f1)} .f-lr,.f-rr{background:var(--f2)} .f-lm,.f-rm{background:var(--f3)} .f-li,.f-ri{background:var(--f4)}
+.k.hl{background:var(--kb-hl)!important;border-color:var(--kb-hl);color:#fff;transform:translateY(-1px);box-shadow:0 3px 8px rgba(47,143,224,.35)}
+.k.hl s,.k.hl sub{color:#e6f2ff}
+/* flick pad */
+.fp{display:grid;grid-template-columns:.8fr 1fr 1fr 1fr .8fr;gap:5px;margin-top:8px;max-width:360px;user-select:none}
+.fk{height:54px;border-radius:8px;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600}
+.fk.side{font-size:12px;font-weight:500;color:var(--muted);background:var(--soft)}
+.fk.blank{visibility:hidden}
+.fk.hl{background:var(--kb-hl);border-color:var(--kb-hl);color:#fff}
+.fk.cross{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:2px;font-size:11px;font-weight:500;height:54px;line-height:1}
+.fk.cross span{display:flex;align-items:center;justify-content:center;opacity:.75}
+.fk.cross span.tg{background:#fff;color:var(--kb-hl);border-radius:4px;font-weight:800;font-size:13px;opacity:1}
+@media (max-width:520px){
+  .kb{gap:3px}.kr{gap:3px}
+  .k{height:30px;font-size:11px;border-radius:5px}
+  .k s{font-size:8px;left:2px}.k sub{font-size:8px;right:2px}
+}
 
 /* result */
 .big{font-size:42px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
@@ -141,6 +171,12 @@ select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px 
           <option value="romaji">罗马字输入（电脑 / 手机全键盘）</option>
           <option value="flick">手机 flick（12 键假名）</option>
           <option value="kana">电脑假名输入（JIS かな配列）</option>
+        </select>
+      </label>
+      <label id="kbdWrap">键盘布局
+        <select id="kbd">
+          <option value="us">美式（US）</option>
+          <option value="jis">日式（JIS）</option>
         </select>
       </label>
       <label><input type="checkbox" id="hint"> 显示按键提示和读音</label>
@@ -205,7 +241,7 @@ const SAMPLE = `毎朝、駅まで歩く途中に小さなパン屋がありま�
 // ー (long vowel) is deliberately NOT treated as punctuation
 const PUNCT = /[、。，．,.・「」『』【】〔〕［］\[\]（）()！？!?：:；;…‥―—"'“”‘’《》〈〉]/g;
 
-let S = {text:'', mode:'sentence', nopunct:false, nospace:true, reps:1, idx:0, ime:'romaji', hint:false};
+let S = {text:'', mode:'sentence', nopunct:false, nospace:true, reps:1, idx:0, ime:'romaji', hint:false, kbd:'us'};
 let segs = [], tgt = [], tgtN = [];
 let errSet = new Set(), segErr = 0, rep = 1;
 let log = [];               // {chars, errs} per finished attempt
@@ -431,7 +467,9 @@ $('file').addEventListener('change', e => {
   r.readAsText(f, 'utf-8');
   e.target.value = '';
 });
-$('ime').addEventListener('change', () => { S.ime = $('ime').value; save(); });
+function kbdVis(){ $('kbdWrap').classList.toggle('hidden', $('ime').value !== 'romaji'); }
+$('ime').addEventListener('change', () => { S.ime = $('ime').value; kbdVis(); save(); });
+$('kbd').addEventListener('change', () => { S.kbd = $('kbd').value; save(); });
 $('hint').addEventListener('change', () => { S.hint = $('hint').checked; save(); if(S.hint) ensureTokenizer(); });
 
 function show(id){ for(const s of ['setup','practice','result']) $(s).classList.toggle('hidden', s!==id); window.scrollTo(0,0); }
@@ -440,7 +478,7 @@ function readOpts(){
   S.text = $('src').value; S.mode = $('mode').value;
   S.nopunct = $('nopunct').checked; S.nospace = $('nospace').checked;
   S.reps = +$('reps').value || 1;
-  S.ime = $('ime').value; S.hint = $('hint').checked;
+  S.ime = $('ime').value; S.hint = $('hint').checked; S.kbd = $('kbd').value;
 }
 function begin(fromIdx, custom){
   readOpts();
@@ -518,6 +556,160 @@ function legend(){
   if(S.ime === 'kana') return '⇧ = 按住 Shift；「+@」= 再按 @ 键加浊点，「+[」= 再按 [ 键加半浊点。';
   return 'ん 统一按 nn；っ 按下一个字母两次，单独的 っ 按 ltu。';
 }
+/* ---------- on-screen keyboards ---------- */
+const MODBASE = {};
+'かが きぎ くぐ けげ こご さざ しじ すず せぜ そぞ ただ ちぢ てで とど はば ひび ふぶ へべ ほぼ はぱ ひぴ ふぷ へぺ ほぽ つづ うゔ あぁ いぃ うぅ えぇ おぉ やゃ ゆゅ よょ わゎ つっ'
+  .split(' ').forEach(p => { const [b,c] = [...p]; MODBASE[c] = b; });
+const isModOf = (typed, want) => typed !== want && MODBASE[want] && MODBASE[want] === (MODBASE[typed] || typed);
+
+const KB = {
+  us: [
+    [['`','~'],['1','!'],['2','@'],['3','#'],['4','$'],['5','%'],['6','^'],['7','&'],['8','*'],['9','('],['0',')'],['-','_'],['=','+'],{id:'bs',label:'⌫',w:1.6}],
+    [{id:'tab',label:'Tab',w:1.5},'q','w','e','r','t','y','u','i','o','p',['[','{'],[']','}'],{id:'\\',label:'\\',w:1.1}],
+    [{id:'caps',label:'Caps',w:1.8},'a','s','d','f','g','h','j','k','l',[';',':'],["'",'"'],{id:'enter',label:'Enter',w:1.9}],
+    [{id:'shiftL',label:'Shift',w:2.3},'z','x','c','v','b','n','m',[',','<'],['.','>'],['/','?'],{id:'shiftR',label:'Shift',w:2.4}],
+    [{id:'space',label:'空格',w:6}]
+  ],
+  jis: [
+    [['1','!'],['2','"'],['3','#'],['4','$'],['5','%'],['6','&'],['7',"'"],['8','('],['9',')'],['0',''],['-','='],['^','~'],['¥','|'],{id:'bs',label:'⌫',w:1.2}],
+    [{id:'tab',label:'Tab',w:1.5},'q','w','e','r','t','y','u','i','o','p',['@','`'],['[','{'],{id:'enter',label:'Enter',w:1.4}],
+    [{id:'caps',label:'Caps',w:1.8},'a','s','d','f','g','h','j','k','l',[';','+'],[':','*'],[']','}'],{id:'pad',label:'',w:1.1,blank:true}],
+    [{id:'shiftL',label:'Shift',w:2.3},'z','x','c','v','b','n','m',[',','<'],['.','>'],['/','?'],['\\','_'],{id:'shiftR',label:'Shift',w:1.8}],
+    [{id:'space',label:'空格',w:6}]
+  ]
+};
+const FINGER = {};
+(function(){
+  const sets = {
+    lp:'` 1 q a z tab caps shiftL', lr:'2 w s x', lm:'3 e d c', li:'4 5 r t f g v b',
+    ri:'6 7 y u h j n m', rm:'8 i k ,', rr:'9 o l .',
+    rp:'0 - = ^ ¥ p @ [ ] \\ ; : \' / enter bs shiftR', th:'space'
+  };
+  for(const [f,s] of Object.entries(sets)) s.split(' ').forEach(k => FINGER[k] = f);
+})();
+const FINGER_NAME = {lp:'左手小指',lr:'左手无名指',lm:'左手中指',li:'左手食指',ri:'右手食指',rm:'右手中指',rr:'右手无名指',rp:'右手小指',th:'拇指'};
+const JIS_KANA_LABEL = {};
+for(const [c,k] of Object.entries(JIS)) if(!k.includes('+') && !k.startsWith('⇧') && !JIS_KANA_LABEL[k.toLowerCase()]) JIS_KANA_LABEL[k.toLowerCase()] = c;
+
+function kbLayout(){ return S.ime === 'kana' ? 'jis' : (S.kbd || 'us'); }
+function keyNorm(k){ return typeof k === 'string' ? {id:k, label:k.toUpperCase()} : Array.isArray(k) ? {id:k[0], label:k[0].toUpperCase(), sh:k[1]} : k; }
+function findKey(ch){
+  const rows = KB[kbLayout()];
+  for(const row of rows) for(const raw of row){
+    const k = keyNorm(raw);
+    if(k.id === ch) return {id:k.id, shift:false};
+  }
+  for(const row of rows) for(const raw of row){
+    const k = keyNorm(raw);
+    if(k.sh && k.sh === ch) return {id:k.id, shift:true};
+  }
+  if(ch === ' ') return {id:'space', shift:false};
+  return null;
+}
+function keyLabel(id){
+  if(id === 'space') return '空格'; if(id === 'enter') return 'Enter';
+  return id.toUpperCase();
+}
+function renderBoard(hl){
+  // hl: {id, shift} | null
+  const rows = KB[kbLayout()];
+  const shiftId = hl && hl.shift ? (/^l/.test(FINGER[hl.id]||'') ? 'shiftR' : 'shiftL') : null;
+  let h = '<div class="kb">';
+  for(const row of rows){
+    h += '<div class="kr">';
+    for(const raw of row){
+      const k = keyNorm(raw);
+      if(k.blank){ h += `<span class="k blank" style="--w:${k.w}"></span>`; continue; }
+      const f = FINGER[k.id] || 'th';
+      const on = hl && (k.id === hl.id || k.id === shiftId);
+      const kana = S.ime === 'kana' ? (JIS_KANA_LABEL[k.id] || '') : '';
+      h += `<span class="k f-${f}${on ? ' hl' : ''}" style="--w:${k.w||1}">` +
+        (k.sh && S.ime !== 'kana' ? `<s>${esc(k.sh)}</s>` : '') +
+        `<em>${esc(k.label)}</em>` + (kana ? `<sub>${esc(kana)}</sub>` : '') + '</span>';
+    }
+    h += '</div>';
+  }
+  return h + '</div>';
+}
+const FLICK_PAD = [
+  [{l:'☆123',side:1},{k:'あ'},{k:'か'},{k:'さ'},{l:'⌫',side:1}],
+  [{l:'ABC',side:1},{k:'た'},{k:'な'},{k:'は'},{l:'空白',id:'space',side:1}],
+  [{l:'あいう',side:1},{k:'ま'},{k:'や'},{k:'ら'},{l:'改行',id:'enter',side:1}],
+  [{l:'🌐',side:1},{l:'小゛゜',id:'mod'},{k:'わ'},{k:'、'},{l:'',side:1,blank:1}]
+];
+const FLICK_ROWS = {あ:'あいうえお',か:'かきくけこ',さ:'さしすせそ',た:'たちつてと',な:'なにぬねの',は:'はひふへほ',
+  ま:'まみむめも',や:'や「ゆ」よ',ら:'らりるれろ',わ:'わをんー','、':'、。？！'};
+function renderFlick(hl){
+  // hl: {key, dir} | {id:'mod'|'space'|'enter'}
+  let h = '<div class="fp">';
+  for(const row of FLICK_PAD) for(const c of row){
+    if(c.blank){ h += '<span class="fk side blank"></span>'; continue; }
+    if(c.k){
+      const on = hl && hl.key === c.k;
+      if(on){
+        const r = [...FLICK_ROWS[c.k]];
+        const pos = {'':r[0],'←':r[1],'↑':r[2],'→':r[3],'↓':r[4]};
+        const cell = d => `<span class="${hl.dir === d ? 'tg' : ''}">${esc(pos[d]||'')}</span>`;
+        h += `<span class="fk hl cross"><span></span>${cell('↑')}<span></span>${cell('←')}${cell('')}${cell('→')}<span></span>${cell('↓')}<span></span></span>`;
+      } else h += `<span class="fk">${esc(c.k === '、' ? '、。?!' : c.k)}</span>`;
+    } else {
+      const on = hl && c.id && hl.id === c.id;
+      let lab = c.l;
+      if(composingHint && c.id === 'space') lab = '次候補';
+      if(composingHint && c.id === 'enter') lab = '確定';
+      h += `<span class="fk side${on ? ' hl' : ''}">${esc(lab)}</span>`;
+    }
+  }
+  return h + '</div>';
+}
+let composingHint = false;
+
+/* next action -> keyboard + label */
+function nextKeyView(act){
+  if(!act) return {label:'', board: S.ime === 'flick' ? renderFlick(null) : renderBoard(null)};
+  if(S.ime === 'flick'){
+    if(act.type === 'char'){
+      const f = FLICK[act.c];
+      if(!f) return {label:`打「${esc(act.c)}」（切换到数字/英文键盘）`, board: renderFlick(null)};
+      const how = f.dir ? `按住 <kbd>${esc(f.key === '、' ? '、。?!' : f.key)}</kbd> 往 <b>${f.dir}</b> 滑` : `点 <kbd>${esc(f.key === '、' ? '、。?!' : f.key)}</kbd>`;
+      const label = f.mod
+        ? `${how} 打出「${esc(MODBASE[act.c]||'')}」，再按 <kbd>小゛゜</kbd>${f.mod > 1 ? ' ' + f.mod + ' 下' : ''} → 「${esc(act.c)}」`
+        : `${how} → 「${esc(act.c)}」`;
+      return {label, board: renderFlick({key:f.key, dir:f.dir})};
+    }
+    if(act.type === 'mod'){
+      const n = act.times > 1 ? ` ${act.times} 下` : '';
+      return {label:`按 <kbd>小゛゜</kbd>${n} → 「${esc(act.c)}」`, board: renderFlick({id:'mod'})};
+    }
+    if(act.type === 'space') return {label:`点 <kbd>次候補</kbd> 或在候选栏里选「${esc(act.word||'')}」`, board: renderFlick({id:'space'})};
+    if(act.type === 'enter') return {label:'点 <kbd>確定</kbd>', board: renderFlick({id:'enter'})};
+  }
+  // physical keyboards
+  let hl = null, label = '';
+  if(act.type === 'space'){ hl = {id:'space'}; label = `按 <kbd>空格</kbd> 变换${act.word ? '成「' + esc(act.word) + '」' : ''}`; }
+  else if(act.type === 'enter'){ hl = {id:'enter'}; label = '按 <kbd>Enter</kbd> 确定'; }
+  else if(act.type === 'mod'){ hl = {id: act.key}; label = `按 <kbd>${esc(act.key)}</kbd> 加${act.key === '@' ? '浊点 ゛' : '半浊点 ゜'} → 「${esc(act.c)}」`; }
+  else if(act.type === 'key'){
+    hl = act.id ? {id:act.id, shift:!!act.shift} : findKey(act.ch);
+    if(!hl) return {label:`打「${esc(act.ch)}」`, board: renderBoard(null)};
+    label = `按 ${hl.shift ? '<kbd>Shift</kbd> + ' : ''}<kbd>${esc(keyLabel(hl.id))}</kbd>` + (act.for ? `（「${esc(act.for)}」）` : '');
+  }
+  if(hl && FINGER[hl.id]) label += `<span class="fn">${FINGER_NAME[FINGER[hl.id]]}</span>`;
+  return {label, board: renderBoard(hl)};
+}
+function firstAct(c, u){
+  // first keystroke for kana char c (u = its unit, for romaji)
+  if(S.ime === 'flick') return {type:'char', c};
+  if(S.ime === 'kana'){
+    const s = JIS[c];
+    if(!s) return {type:'key', ch:c, for:c};
+    const shift = s.startsWith('⇧');
+    const id = (shift ? s.slice(1) : s).split('+')[0].toLowerCase();
+    return {type:'key', id, shift, for:c};
+  }
+  return u && u.r ? {type:'key', ch:u.r[0], for:u.k} : {type:'key', ch:c, for:c};
+}
+
 function renderHint(base, comp){
   lastBase = base; lastComp = comp;
   const box = $('hintBox');
@@ -526,41 +718,90 @@ function renderHint(base, comp){
   if(tokState === 'loading' || tokState === 'idle'){
     box.innerHTML = '<div class="read">正在加载读音词典…（第一次约 18MB，之后会缓存）</div>'; return;
   }
+  composingHint = !!comp;
   const toks = tokInfo(segs[S.idx]);
   let i = toks.findIndex(t => t.end > base);
-  if(i < 0){ box.innerHTML = '<div class="read">这句已经打完了，按回车确定。</div>'; return; }
+  if(i < 0){ const v = nextKeyView({type:'enter'}); box.innerHTML = `<div class="nk">这句打完了，${v.label}</div>` + v.board; return; }
 
   const cn = [...(comp||'')].map(normc).join('');
+  let act = null, stateNote = '';
+
+  // IME is showing a conversion candidate (kanji / katakana)
+  if(cn && /[㐀-鿿豈-﫿ァ-ヺ々]/.test(cn)){
+    const want = tgtN.slice(base, base + [...cn].length).join('');
+    const t = toks[i];
+    if(want === cn) act = {type:'enter'};
+    else act = {type:'space', word: t.surface};
+    stateNote = want === cn ? '选对了' : '候选不对，换一个';
+    const v = nextKeyView(act);
+    box.innerHTML = `<div class="head"><span class="word">${esc(t.surface)}</span><span class="read">${esc(t.reading||'')}</span><span class="conv">${stateNote}</span></div>` +
+      `<div class="nk">${v.label}</div>` + v.board;
+    return;
+  }
+
   const m = cn.match(/[a-z]+$/);
-  const pend = m ? m[0] : '';
-  let k = [...kata2hira(pend ? cn.slice(0, -pend.length) : cn)].length;
-  while(i < toks.length-1 && toks[i].units && toks[i].kanaLen > 0 && (k > toks[i].kanaLen || (k === toks[i].kanaLen && pend))){ k -= toks[i].kanaLen; i++; }
+  const pend = S.ime === 'romaji' && m ? m[0] : '';
+  const ca = [...kata2hira(pend ? cn.slice(0, -pend.length) : cn)];
+  let R = []; for(let q=i; q<toks.length && toks[q].units; q++) for(const u of toks[q].units) R.push(...u.k);
+  let j = 0; while(j < ca.length && j < R.length && ca[j] === R[j]) j++;
+  const modPending = S.ime !== 'romaji' && j === ca.length-1 && R[j] && isModOf(ca[j], R[j]) &&
+    (S.ime === 'flick' || (JIS[R[j]]||'').includes('+'));
+
+  let k = j;
+  while(i < toks.length-1 && toks[i].units && toks[i].kanaLen > 0 && (k > toks[i].kanaLen || (k === toks[i].kanaLen && (pend || modPending)))){ k -= toks[i].kanaLen; i++; }
   const t = toks[i];
 
   let html = '';
   const err = tokState === 'error' ? '<div class="conv">读音词典没加载成功，汉字的读音暂时没法提示。</div>' : '';
   if(!t.units){
     html = `<div class="head"><span class="word">${esc(t.surface)}</span><span class="read">这个词没有读音数据</span></div>`;
+    act = null;
   } else {
     const showRead = t.reading && t.reading !== t.surface;
     html = `<div class="head"><span class="word">${esc(t.surface)}</span>` +
       (showRead ? `<span class="read">${esc(t.reading)}</span>` : '') +
       (convNote(t) ? `<span class="conv">${esc(convNote(t))}</span>` : '') + '</div><div class="units">';
-    let cum = 0, curSet = false;
+    let cum = 0, cur = null, curOff = 0;
     for(const u of t.units){
       const len = [...u.k].length;
       let cls = '';
       let keys = esc(unitKeys(u));
       if(cum + len <= k) cls = 'done';
-      else if(!curSet){
-        cls = 'cur'; curSet = true;
+      else if(!cur){
+        cls = 'cur'; cur = u; curOff = k - cum;
         if(S.ime === 'romaji' && pend && u.r && u.r.startsWith(pend)) keys = `<u>${esc(pend)}</u>${esc(u.r.slice(pend.length))}`;
       }
       cum += len;
       html += `<span class="u ${cls}"><i>${esc(u.k)}</i><b>${keys}</b></span>`;
     }
     html += '</div>';
+
+    if(modPending){
+      const want = R[j], typed = ca[j];
+      if(S.ime === 'flick'){
+        const times = Math.max(1, (FLICK[want].mod||0) - ((FLICK[typed]||{}).mod||0));
+        act = {type:'mod', c:want, times};
+      } else act = {type:'mod', c:want, key: JIS[want].endsWith('@') ? '@' : '['};
+    } else if(cur){
+      const c = [...cur.k][curOff] || [...cur.k][0];
+      if(S.ime === 'romaji'){
+        const r = cur.r || '';
+        const ch = (pend && r.startsWith(pend)) ? r[pend.length] : r[0];
+        act = ch ? {type:'key', ch, for:cur.k} : null;
+      } else act = firstAct(c, cur);
+    } else {
+      // whole word typed
+      if(t.kanji || t.kata) act = {type:'space', word:t.surface};
+      else {
+        const nt = toks[i+1];
+        if(nt && nt.units && nt.units[0]) act = firstAct([...nt.units[0].k][0], nt.units[0]);
+        else act = {type:'enter'};
+      }
+    }
   }
+  const v = nextKeyView(act);
+  if(v.label) html += `<div class="nk">下一步：${v.label}</div>`;
+  html += v.board;
   const nt = toks[i+1];
   if(nt) html += `<div class="after">接着：${esc(nt.surface)}${nt.reading && nt.reading !== nt.surface ? '（' + esc(nt.reading) + '）' : ''}` +
     (nt.units ? ` → <b>${esc(nt.units.map(unitKeys).join(S.ime === 'romaji' ? '' : ' · '))}</b>` : '') + '</div>';
@@ -681,7 +922,7 @@ load();
 $('src').value = S.text || '';
 $('mode').value = S.mode; $('nopunct').checked = S.nopunct; $('nospace').checked = S.nospace;
 $('reps').value = String(S.reps||1);
-$('ime').value = S.ime || 'romaji'; $('hint').checked = !!S.hint;
+$('ime').value = S.ime || 'romaji'; $('hint').checked = !!S.hint; $('kbd').value = S.kbd || 'us'; kbdVis();
 updateCount(); refreshResume();
 })();
 </script>
