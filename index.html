@@ -109,6 +109,63 @@ select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px 
 .fk.cross{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);padding:2px;font-size:11px;font-weight:500;height:54px;line-height:1}
 .fk.cross span{display:flex;align-items:center;justify-content:center;opacity:.75}
 .fk.cross span.tg{background:#fff;color:var(--kb-hl);border-radius:4px;font-weight:800;font-size:13px;opacity:1}
+/* mini maps (compact mode) */
+.nkrow{display:block}
+.mq,.mf{display:none}
+.mq{flex-direction:column;gap:2px;flex:none}
+.mq div{display:flex;gap:2px;justify-content:center}
+.mq i,.mf i{font-style:normal;display:flex;align-items:center;justify-content:center;border-radius:3px;background:var(--card);border:1px solid var(--line);color:var(--muted);font-size:9px;line-height:1}
+.mq i{width:13px;height:15px}
+.mq i.sp{width:60px}.mq i.en{width:28px}
+.mq i.on,.mf i.on{background:var(--kb-hl);border-color:var(--kb-hl);color:#fff;font-weight:700}
+.mf{gap:6px;align-items:center;flex:none}
+.mf .g{display:grid;grid-template-columns:repeat(4,22px);grid-auto-rows:16px;gap:2px}
+.mf .g i.side{font-size:7px;background:var(--soft)}
+.mf .x{display:grid;grid-template-columns:repeat(3,20px);grid-template-rows:repeat(3,20px);gap:1px}
+.mf .x span{display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);border-radius:4px}
+.mf .x span.c{background:var(--kb-hl);color:#fff;opacity:.85}
+.mf .x span.tg{background:var(--kb-hl);color:#fff;font-weight:800;opacity:1;box-shadow:0 0 0 2px #fff inset}
+.cbar{display:none}
+
+/* compact typing mode: phone with the system keyboard open */
+body.compact{overflow:hidden}
+body.compact .wrap{padding:0}
+body.compact #practice{position:fixed;left:0;right:0;top:var(--vvt,0px);height:var(--vvh,100vh);margin:0;border:0;border-radius:0;
+  padding:6px 10px 6px;display:flex;flex-direction:column;gap:6px;z-index:20;overflow:hidden}
+body.compact header,body.compact #practice .stats,body.compact #practice .bar,body.compact #next,body.compact .prow,body.compact .msg{display:none!important}
+body.compact .cbar{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted);flex:none}
+body.compact .cbar .sp{flex:1}
+body.compact .cbar button{font-size:12px;padding:3px 9px;border-radius:7px}
+body.compact .target{flex:1 1 auto;min-height:34px;overflow-y:auto;margin:0;font-size:19px;line-height:1.75;scroll-behavior:smooth}
+body.compact .target.ruby{line-height:2.05}
+body.compact .target rt{font-size:10px}
+body.compact .hint{margin:0;padding:6px 8px;flex:none;font-size:13px}
+body.compact .hint .head{gap:2px 8px}
+body.compact .hint .word{font-size:15px}
+body.compact .hint .conv{font-size:11px}
+body.compact .hint .units{margin-top:4px;gap:4px;flex-wrap:nowrap;overflow-x:auto}
+body.compact .hint .u{min-width:30px;padding:1px 5px 2px;flex:none}
+body.compact .hint .u i{font-size:10px}
+body.compact .hint .u b{font-size:13px}
+body.compact .hint .after,body.compact .hint .legend,body.compact .hint .kb,body.compact .hint .fp{display:none}
+body.compact .nkrow{display:flex;align-items:center;gap:8px;margin-top:5px}
+body.compact .nkrow .nk{margin:0;flex:1;font-size:13px;line-height:1.5}
+body.compact .nk kbd{font-size:12px;padding:0 5px}
+body.compact .mq,body.compact .mf{display:flex}
+body.compact #inp{flex:none;height:42px;min-height:0;font-size:18px;padding:7px 10px;line-height:1.4}
+body.compact .hint .head,body.compact .nk .fn{display:none}
+body.compact .cbar{font-size:11px;gap:8px}
+body.compact .cbar button{font-size:11px;padding:1px 8px}
+body.compact .target{min-height:30px;font-size:18px}
+body.compact .hint .u{min-width:26px;padding:0 4px 1px;border-radius:6px}
+body.compact .hint .u i{font-size:9px}
+body.compact .hint .u b{font-size:12px}
+body.compact .hint .units{margin-top:0}
+body.compact .mq i{height:13px}
+body.compact .mf .g{grid-auto-rows:13px}
+body.compact .mf .x{grid-template-columns:repeat(3,17px);grid-template-rows:repeat(3,17px)}
+body.compact .mf .x span{font-size:11px}
+body.compact #inp{height:40px}
 @media (max-width:520px){
   .kb{gap:3px}.kr{gap:3px}
   .k{height:30px;font-size:11px;border-radius:5px}
@@ -191,6 +248,12 @@ select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px 
 
   <!-- practice -->
   <section id="practice" class="card hidden">
+    <div class="cbar">
+      <span id="cProg">0/0</span><span id="cSpeed"></span>
+      <span class="sp"></span>
+      <button id="cHint">提示</button>
+      <button id="cDone">收起键盘</button>
+    </div>
     <div class="stats">
       <div class="stat"><b id="sProg">0/0</b><span>进度</span></div>
       <div class="stat"><b id="sSpeed">0</b><span>字/分钟</span></div>
@@ -203,7 +266,7 @@ select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px 
     <div class="hint hidden" id="hintBox"></div>
     <textarea id="inp" rows="2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="在这里打字…"></textarea>
     <div class="msg" id="msg"></div>
-    <div class="row space">
+    <div class="row space prow">
       <div class="row" style="margin:0">
         <button id="prev">上一句</button>
         <button id="redo">重打</button>
@@ -541,6 +604,14 @@ function render(judgeLen, vN){
     } else { frag.appendChild(spans[i]); i++; }
   }
   box.appendChild(frag);
+  if(compact) keepCursorVisible();
+}
+function keepCursorVisible(){
+  const box = $('target');
+  const el = box.querySelector('.c, .w, .p') || box.lastElementChild;
+  if(!el) return;
+  const r = el.getBoundingClientRect(), b = box.getBoundingClientRect();
+  if(r.bottom > b.bottom - 2 || r.top < b.top + 2) box.scrollTop += (r.top - b.top) - 6;
 }
 
 /* ---------- hint ---------- */
@@ -664,25 +735,57 @@ function renderFlick(hl){
 }
 let composingHint = false;
 
+/* mini maps for compact mode (the real keyboard is on screen right below) */
+let compact = false;
+function miniQwerty(hl){
+  const on = id => hl && hl.id === id ? 'on' : '';
+  let h = '<div class="mq">';
+  for(const r of ['qwertyuiop','asdfghjkl','zxcvbnm']){ h += '<div>'; for(const c of r) h += `<i class="${on(c)}">${c.toUpperCase()}</i>`; h += '</div>'; }
+  return h + `<div><i class="sp ${on('space')}">空白</i><i class="en ${on('enter')}">改行</i></div></div>`;
+}
+const MINI_FLICK = [['あ','か','さ','⌫'],['た','な','は','空白'],['ま','や','ら','改行'],['小゛゜','わ','、','']];
+const MINI_ID = {'空白':'space','改行':'enter','小゛゜':'mod'};
+function miniFlick(hl){
+  let h = '<div class="mf"><div class="g">';
+  MINI_FLICK.forEach(row => row.forEach((c, ci) => {
+    const isKana = !!FLICK_ROWS[c];
+    const on = hl && ((isKana && hl.key === c) || (MINI_ID[c] && hl.id === MINI_ID[c]));
+    let lab = c === '、' ? '、。' : c;
+    if(composingHint && c === '空白') lab = '次候補';
+    if(composingHint && c === '改行') lab = '確定';
+    h += `<i class="${isKana ? '' : 'side'} ${on ? 'on' : ''}">${esc(lab)}</i>`;
+  }));
+  h += '</div>';
+  if(hl && hl.key){
+    const r = [...FLICK_ROWS[hl.key]];
+    const pos = {'':r[0],'←':r[1],'↑':r[2],'→':r[3],'↓':r[4]};
+    const cell = d => `<span class="${hl.dir === d ? 'tg' : (d === '' ? 'c' : '')}">${esc(pos[d]||'')}</span>`;
+    h += `<div class="x"><span></span>${cell('↑')}<span></span>${cell('←')}${cell('')}${cell('→')}<span></span>${cell('↓')}<span></span></div>`;
+  }
+  return h + '</div>';
+}
+const FB = x => compact ? miniFlick(x) : renderFlick(x);
+const PB = x => compact ? miniQwerty(x) : renderBoard(x);
+
 /* next action -> keyboard + label */
 function nextKeyView(act){
-  if(!act) return {label:'', board: S.ime === 'flick' ? renderFlick(null) : renderBoard(null)};
+  if(!act) return {label:'', board: S.ime === 'flick' ? FB(null) : PB(null)};
   if(S.ime === 'flick'){
     if(act.type === 'char'){
       const f = FLICK[act.c];
-      if(!f) return {label:`打「${esc(act.c)}」（切换到数字/英文键盘）`, board: renderFlick(null)};
+      if(!f) return {label:`打「${esc(act.c)}」（切换到数字/英文键盘）`, board: FB(null)};
       const how = f.dir ? `按住 <kbd>${esc(f.key === '、' ? '、。?!' : f.key)}</kbd> 往 <b>${f.dir}</b> 滑` : `点 <kbd>${esc(f.key === '、' ? '、。?!' : f.key)}</kbd>`;
       const label = f.mod
         ? `${how} 打出「${esc(MODBASE[act.c]||'')}」，再按 <kbd>小゛゜</kbd>${f.mod > 1 ? ' ' + f.mod + ' 下' : ''} → 「${esc(act.c)}」`
         : `${how} → 「${esc(act.c)}」`;
-      return {label, board: renderFlick({key:f.key, dir:f.dir})};
+      return {label, board: FB({key:f.key, dir:f.dir})};
     }
     if(act.type === 'mod'){
       const n = act.times > 1 ? ` ${act.times} 下` : '';
-      return {label:`按 <kbd>小゛゜</kbd>${n} → 「${esc(act.c)}」`, board: renderFlick({id:'mod'})};
+      return {label:`按 <kbd>小゛゜</kbd>${n} → 「${esc(act.c)}」`, board: FB({id:'mod'})};
     }
-    if(act.type === 'space') return {label:`点 <kbd>次候補</kbd> 或在候选栏里选「${esc(act.word||'')}」`, board: renderFlick({id:'space'})};
-    if(act.type === 'enter') return {label:'点 <kbd>確定</kbd>', board: renderFlick({id:'enter'})};
+    if(act.type === 'space') return {label:`点 <kbd>次候補</kbd> 或在候选栏里选「${esc(act.word||'')}」`, board: FB({id:'space'})};
+    if(act.type === 'enter') return {label:'点 <kbd>確定</kbd>', board: FB({id:'enter'})};
   }
   // physical keyboards
   let hl = null, label = '';
@@ -691,11 +794,11 @@ function nextKeyView(act){
   else if(act.type === 'mod'){ hl = {id: act.key}; label = `按 <kbd>${esc(act.key)}</kbd> 加${act.key === '@' ? '浊点 ゛' : '半浊点 ゜'} → 「${esc(act.c)}」`; }
   else if(act.type === 'key'){
     hl = act.id ? {id:act.id, shift:!!act.shift} : findKey(act.ch);
-    if(!hl) return {label:`打「${esc(act.ch)}」`, board: renderBoard(null)};
+    if(!hl) return {label:`打「${esc(act.ch)}」`, board: PB(null)};
     label = `按 ${hl.shift ? '<kbd>Shift</kbd> + ' : ''}<kbd>${esc(keyLabel(hl.id))}</kbd>` + (act.for ? `（「${esc(act.for)}」）` : '');
   }
   if(hl && FINGER[hl.id]) label += `<span class="fn">${FINGER_NAME[FINGER[hl.id]]}</span>`;
-  return {label, board: renderBoard(hl)};
+  return {label, board: PB(hl)};
 }
 function firstAct(c, u){
   // first keystroke for kana char c (u = its unit, for romaji)
@@ -721,7 +824,7 @@ function renderHint(base, comp){
   composingHint = !!comp;
   const toks = tokInfo(segs[S.idx]);
   let i = toks.findIndex(t => t.end > base);
-  if(i < 0){ const v = nextKeyView({type:'enter'}); box.innerHTML = `<div class="nk">这句打完了，${v.label}</div>` + v.board; return; }
+  if(i < 0){ const v = nextKeyView({type:'enter'}); box.innerHTML = `<div class="nkrow"><div class="nk">这句打完了，${v.label}</div>${v.board}</div>`; return; }
 
   const cn = [...(comp||'')].map(normc).join('');
   let act = null, stateNote = '';
@@ -735,7 +838,7 @@ function renderHint(base, comp){
     stateNote = want === cn ? '选对了' : '候选不对，换一个';
     const v = nextKeyView(act);
     box.innerHTML = `<div class="head"><span class="word">${esc(t.surface)}</span><span class="read">${esc(t.reading||'')}</span><span class="conv">${stateNote}</span></div>` +
-      `<div class="nk">${v.label}</div>` + v.board;
+      `<div class="nkrow"><div class="nk">${v.label}</div>${v.board}</div>`;
     return;
   }
 
@@ -800,8 +903,7 @@ function renderHint(base, comp){
     }
   }
   const v = nextKeyView(act);
-  if(v.label) html += `<div class="nk">下一步：${v.label}</div>`;
-  html += v.board;
+  html += `<div class="nkrow"><div class="nk">${v.label ? '下一步：' + v.label : ''}</div>${v.board}</div>`;
   const nt = toks[i+1];
   if(nt) html += `<div class="after">接着：${esc(nt.surface)}${nt.reading && nt.reading !== nt.surface ? '（' + esc(nt.reading) + '）' : ''}` +
     (nt.units ? ` → <b>${esc(nt.units.map(unitKeys).join(S.ime === 'romaji' ? '' : ' · '))}</b>` : '') + '</div>';
@@ -813,8 +915,10 @@ function refreshAll(){
   if($('practice').classList.contains('hidden') || !segs.length) return;
   render(lastJudge, lastVN); renderHint(lastBase, lastComp);
 }
-function updHintBtn(){ const b = $('hintBtn'); b.textContent = S.hint ? '提示：开' : '提示：关'; b.classList.toggle('on', S.hint); }
-$('hintBtn').onclick = () => {
+function updHintBtn(){
+  for(const b of [$('hintBtn'), $('cHint')]){ b.textContent = S.hint ? '提示：开' : '提示：关'; b.classList.toggle('on', S.hint); }
+}
+$('hintBtn').onclick = $('cHint').onclick = () => {
   S.hint = !S.hint; $('hint').checked = S.hint; save(); updHintBtn();
   if(S.hint) ensureTokenizer();
   refreshAll(); $('inp').focus();
@@ -873,6 +977,8 @@ function updStats(){
   $('sSpeed').textContent = (min > 0.05 && t.chars) ? Math.round(t.chars/min) : '–';
   $('sAcc').textContent = acc(t);
   $('sTime').textContent = fmt(activeMs);
+  $('cProg').textContent = `${finished.size}/${segs.length} 句`;
+  $('cSpeed').textContent = (min > 0.05 && t.chars) ? `${Math.round(t.chars/min)} 字/分` : '';
 }
 function finish(){
   clearInterval(tick);
@@ -891,6 +997,27 @@ function finish(){
 }
 
 const inp = $('inp');
+/* ---------- compact mode for phones ---------- */
+const isTouch = matchMedia('(pointer: coarse)').matches;
+function vvUpdate(){
+  const vv = window.visualViewport; const root = document.documentElement.style;
+  if(vv){ root.setProperty('--vvh', vv.height + 'px'); root.setProperty('--vvt', vv.offsetTop + 'px'); }
+  else { root.setProperty('--vvh', window.innerHeight + 'px'); root.setProperty('--vvt', '0px'); }
+  if(compact) keepCursorVisible();
+}
+if(window.visualViewport){ visualViewport.addEventListener('resize', vvUpdate); visualViewport.addEventListener('scroll', vvUpdate); }
+window.addEventListener('resize', vvUpdate);
+function setCompact(on){
+  if(compact === on) return;
+  compact = on;
+  document.body.classList.toggle('compact', on);
+  vvUpdate(); refreshAll();
+}
+inp.addEventListener('focus', () => { if((isTouch || window.FORCE_COMPACT) && window.innerWidth <= 700) setCompact(true); });
+inp.addEventListener('blur', () => { setTimeout(() => { if(document.activeElement !== inp) setCompact(false); }, 150); });
+// keep the keyboard open when tapping the small buttons
+for(const id of ['cHint']) $(id).addEventListener('pointerdown', e => e.preventDefault());
+$('cDone').onclick = () => inp.blur();
 inp.addEventListener('compositionstart', () => { composing = true; preLen = [...clean(inp.value)].length; });
 inp.addEventListener('compositionupdate', () => { setTimeout(()=>{ if(composing) handle(false); }, 0); });
 inp.addEventListener('compositionend', () => { composing = false; setTimeout(()=>handle(true), 0); });
