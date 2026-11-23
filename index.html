@@ -3,23 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>日语文章打字练习</title>
+<title>★日语文章打字练习★ 欢迎光临！</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Noto+Serif+JP:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Noto+Serif+JP:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f6f2ea;--card:#fffdf8;--ink:#2a2521;--muted:#857b70;--line:#e5ddd0;
-  --ok:#2c7a57;--bad:#c2410c;--bad-bg:#fde4d6;--accent:#b4462f;--accent-ink:#fff;
-  --pending:#b3a99d;--cursor:#b4462f;--soft:#efe8dc;--hint:#f3ece0;
-  --kb-hl:#2f8fe0;--f1:#f6dfe4;--f2:#e3e4f6;--f3:#dcecf6;--f4:#e1f2e6;
+  --bg:#fffff4;--card:#ffffff;--ink:#222;--muted:#6b5b8a;--line:#b9a6e8;
+  --ok:#009944;--bad:#ff0000;--bad-bg:#ffd0e0;--accent:#ff3399;--accent-ink:#fff;
+  --pending:#a99cbc;--cursor:#ff0066;--soft:#e9f7ff;--hint:#fffbd2;
+  --kb-hl:#1e9bff;--f1:#ffd6ea;--f2:#ded6ff;--f3:#cfefff;--f4:#d6ffd0;
+  color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root{
-  --bg:#1a1815;--card:#23201c;--ink:#efe9df;--muted:#9b9187;--line:#38322b;
-  --ok:#6cc59a;--bad:#ff8f63;--bad-bg:#4b2516;--accent:#e07a60;--accent-ink:#1a1815;
-  --pending:#6a6259;--cursor:#e07a60;--soft:#2c2823;--hint:#2a2622;
-  --kb-hl:#3d9be9;--f1:#3d2a2e;--f2:#2d2e3f;--f3:#26333d;--f4:#28382d;
-}}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font-family:"Zen Kaku Gothic New",system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.6;-webkit-text-size-adjust:100%}
@@ -101,8 +96,8 @@ select{font:inherit;font-size:14px;padding:5px 8px;border-radius:8px;border:1px 
 .k.hl{background:var(--kb-hl)!important;border-color:var(--kb-hl);color:#fff;transform:translateY(-1px);box-shadow:0 3px 8px rgba(47,143,224,.35)}
 .k.hl s,.k.hl sub{color:#e6f2ff}
 /* flick pad */
-.fp{display:grid;grid-template-columns:.8fr 1fr 1fr 1fr .8fr;gap:5px;margin-top:8px;max-width:360px;user-select:none}
-.fk{height:54px;border-radius:8px;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600}
+.fp{display:grid;grid-template-columns:minmax(0,.8fr) repeat(3,minmax(0,1fr)) minmax(0,.8fr);width:100%;gap:5px;margin-top:8px;max-width:360px;user-select:none}
+.fk{min-width:0;overflow:hidden;height:54px;border-radius:8px;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600}
 .fk.side{font-size:12px;font-weight:500;color:var(--muted);background:var(--soft)}
 .fk.blank{visibility:hidden}
 .fk.hl{background:var(--kb-hl);border-color:var(--kb-hl);color:#fff}
@@ -184,114 +179,348 @@ body.compact #inp{height:40px}
   .hint .u{min-width:34px;padding:3px 6px 4px}
   .hint .u b{font-size:15px}
 }
+
+/* =================== RETRO HOMEPAGE THEME =================== */
+body{
+  font-family:"PMingLiU","MingLiU","Songti SC","SimSun","Hiragino Mincho ProN",serif;
+  font-size:15px;color:#222;
+  background-color:#faf6a4;
+  background-image:var(--bg-pattern),
+    linear-gradient(180deg,#faf6a4 0,#faf6a4 640px,#d4f7a8 900px,#aee6ff 1100px,#d9b8ff 1300px,#ffc0dc 1480px,#ffe1a6 1650px,#c8f5b8 1850px);
+  background-repeat:repeat,no-repeat;background-size:44px 44px,100% 100%;
+  min-height:100vh;
+}
+.wrap{max-width:1200px;padding:8px 14px 40px}
+.px{display:inline-block;width:32px;height:32px;background:var(--s) center/contain no-repeat;image-rendering:pixelated;vertical-align:middle}
+.px.sm{width:20px;height:20px}.px.lg{width:44px;height:44px}
+.hop{animation:hop .6s steps(2) infinite}
+.hop:nth-child(2n){animation-delay:.3s}
+@keyframes hop{50%{transform:translateY(-5px)}}
+.blink{animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* header */
+.top{text-align:center;padding:6px 0 4px}
+.birds{display:flex;justify-content:center;gap:10px;flex-wrap:nowrap;overflow:hidden;height:40px}
+.welcome{margin:4px 0 0;font-size:34px;font-weight:900;color:#5cab1e;letter-spacing:.06em;
+  text-shadow:2px 2px 0 #fff,3px 3px 0 #2e6b0a;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+.subtitle{display:inline-block;margin-top:6px;font-size:22px;font-weight:900;color:#ff1493;
+  background:linear-gradient(#fff,#ffe6f3);border:3px ridge #ff66b2;padding:2px 14px;text-shadow:1px 1px 0 #ffd700}
+.marquee{margin:8px auto 0;max-width:900px;overflow:hidden;white-space:nowrap;background:#000080;color:#ffff66;
+  border:3px inset #9999ff;font-family:"DotGothic16",monospace;font-size:14px;padding:3px 0}
+.marquee span{display:inline-block;padding-left:100%;animation:marq 22s linear infinite;animation-delay:-7s}
+@keyframes marq{to{transform:translateX(-100%)}}
+
+/* 3-column layout */
+.layout{display:grid;grid-template-columns:230px minmax(0,1fr) 240px;gap:16px;margin-top:14px;align-items:start}
+.col{display:flex;flex-direction:column;gap:14px}
+@media (max-width:1060px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .main{order:1}.col.left{order:2}.col.right{order:3}
+  .col{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr))}
+}
+
+/* retro boxes */
+.box{border:4px solid #33cccc;background:#a8f5dc;box-shadow:3px 3px 0 rgba(0,0,0,.15)}
+.box h3{margin:0;padding:6px 10px;font-size:19px;font-weight:900}
+.box .in{padding:8px 10px;font-size:14px;line-height:1.7}
+.b-mint{border-color:#2ec4c4;background:#a6f3df}
+.b-mint h3{color:#55aa22;border-bottom:3px solid #2ec4c4;display:flex;align-items:center;gap:8px}
+.b-purple{border-color:#8f6bff;background:#b9a6ff;text-align:center}
+.b-purple .big-u{display:block;padding:12px 8px;font-size:22px;font-weight:900;font-style:italic;color:#ffe100;
+  text-decoration:underline;text-shadow:2px 2px 0 #8a5a00;line-height:1.4}
+.b-red{border-color:#ff5c6c;background:#fff}
+.b-red h3{background:#ff5c6c;color:#fff;font-size:22px;text-shadow:2px 2px 0 #b3002a}
+.b-red .row1{padding:5px 8px;border-top:3px solid #ff5c6c;color:#e0004d;font-size:14px;line-height:1.6}
+.b-pink{border:6px solid #ffb6d9;background:#ffb6d9;padding:0}
+.b-pink .inner{border:4px solid #ff1493;background:#fffbd0}
+.b-pink h3{color:#ff1493;border-bottom:4px solid #ff1493}
+.b-pink .prow2{padding:5px 10px;border-bottom:3px solid #ff1493;font-size:14px;color:#3355ff;display:flex;justify-content:space-between;gap:6px;align-items:center}
+.b-pink .prow2:last-child{border-bottom:0}
+.b-pink .prow2 b{color:#ff1493;font-weight:700}
+.b-news{border-color:#cc33ff;background:#f6e6ff}
+.b-news h3{background:linear-gradient(90deg,#ff33cc,#cc33ff);color:#fff;display:flex;align-items:center;gap:8px}
+.new{display:inline-block;background:#ff0;color:#f00;font:700 11px "DotGothic16",monospace;padding:0 4px;border:1px solid #f00;transform:rotate(-6deg)}
+.b-news li{margin:2px 0}
+.b-news ul{margin:0;padding-left:20px;color:#5500aa}
+.construct{border:4px solid #000;background:repeating-linear-gradient(45deg,#ffd400 0 14px,#111 14px 28px);padding:8px}
+.construct div{background:#ffd400;border:2px solid #000;text-align:center;font-weight:900;padding:6px;font-size:15px}
+.badges{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.badge88{width:88px;height:31px;display:flex;align-items:center;justify-content:center;flex-direction:column;
+  font:11px/1.1 "DotGothic16",monospace;border:2px outset #ddd;text-align:center}
+.odo{display:inline-flex;gap:1px;background:#000;padding:2px;border:2px inset #888;vertical-align:middle}
+.odo i{font:700 16px/1 "DotGothic16",monospace;font-style:normal;color:#39ff14;background:#111;padding:2px 3px;border-right:1px solid #333}
+
+/* main title box */
+.titlebox{border:4px solid #66cc66;background:#b8f5a8}
+.titlebox h2{margin:0;padding:8px 12px;font-size:26px;font-weight:900;color:#ff1493;border-bottom:3px solid #66cc66;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.titlebox p{margin:0;padding:8px 12px;font-size:15px}
+
+/* cards = the app panels */
+.card{border:4px solid #f5a070;border-radius:0;background:#ffd9b8;box-shadow:3px 3px 0 rgba(0,0,0,.15);margin-top:14px;padding:14px}
+.card > .cap{margin:-14px -14px 12px;padding:6px 12px;background:linear-gradient(90deg,#ff9966,#ff6699);color:#fff;font-weight:900;font-size:17px;
+  text-shadow:1px 1px 0 #a03;display:flex;align-items:center;gap:8px}
+textarea{background:#fffff4;border:3px inset #c8b8e8;border-radius:0;font-family:inherit}
+textarea:focus{border-color:#ff66b2;background:#fff}
+button,.filebtn{border-radius:0;border:3px outset #e8e8e8;background:linear-gradient(#ffffff,#d8d8d8);font-family:inherit;font-weight:700;color:#333;padding:7px 14px}
+button:active,.filebtn:active{border-style:inset}
+button:hover,.filebtn:hover{border-color:#e8e8e8;background:linear-gradient(#fffbe0,#ffe08a)}
+button.primary{background:linear-gradient(#ff9fd0,#ff3399);border:3px outset #ff8cc6;color:#fff;font-size:17px;text-shadow:1px 1px 0 #a0004a;padding:8px 22px}
+button.primary:hover{background:linear-gradient(#ffb6dc,#ff4da6)}
+button.ghost{border:3px outset #e8e8e8;background:linear-gradient(#e9fbff,#b7ecff);color:#0055aa;padding:7px 12px}
+button.on{background:linear-gradient(#fffbb0,#ffd700);color:#cc0066;border-color:#ffe866}
+select{border-radius:0;border:2px inset #ccc;font-family:inherit;background:#fff}
+.opts{color:#552288;font-weight:700}
+.opts label{background:#fff;border:2px solid #9b7cff;padding:4px 8px 4px 4px}
+.opts label::before{content:"";width:20px;height:20px;flex:none;background:var(--spr-star) center/contain no-repeat;image-rendering:pixelated}
+.opts label:nth-child(2n)::before{background-image:var(--spr-heart)}
+.opts.ime{border-top:3px dotted #ff66b2}
+.note{color:#7a3d00}
+
+/* practice */
+.stat{background:#000080;border:3px inset #8888ff;border-radius:0}
+.stat b{color:#39ff14;font-family:"DotGothic16",monospace;text-shadow:0 0 4px #39ff14}
+.stat span{color:#ffff66;font-family:"DotGothic16",monospace}
+.bar{height:10px;background:#fff;border:2px inset #ccc;border-radius:0}
+.bar i{background:repeating-linear-gradient(90deg,#ff3399 0 8px,#ffcc00 8px 16px,#33cc66 16px 24px,#3399ff 24px 32px)}
+.target{background:#fffff4;border:4px double #9966ff;padding:8px 12px;margin:14px 0 6px}
+.target rt{font-family:"DotGothic16",sans-serif;color:#cc3399}
+.next{color:#996633}
+.next::before{content:"▶下一句　";color:#ff3399}
+.msg{color:#cc0066;font-weight:700}
+.hint{background:#fffbd2;border:3px dashed #ff9900;border-radius:0}
+.hint .word{color:#ff1493}
+.hint .u{border-radius:0;border:2px outset #eee;background:#fff}
+.hint .u.cur{border:2px solid #ff1493;box-shadow:0 0 0 2px #ffe100}
+.hint .u b{font-family:"DotGothic16",ui-monospace,monospace}
+.hint .nk kbd{border-radius:0;border:2px outset #7cc4ff;font-family:"DotGothic16",monospace}
+.k,.fk{border-radius:2px;border:2px outset #f4f4f4;font-family:"DotGothic16",sans-serif}
+.k.hl,.fk.hl{animation:pulse .8s ease-in-out infinite;border:2px outset #7cc4ff}
+@keyframes pulse{50%{filter:brightness(1.25);box-shadow:0 0 0 3px #ffe100}}
+.flash{animation:rainbow .5s}
+@keyframes rainbow{0%{background:#ffe6f3}33%{background:#fffbd0}66%{background:#e0ffe0}100%{background:#fffff4}}
+.burst{position:fixed;pointer-events:none;z-index:50;width:22px;height:22px;background:var(--spr-star) center/contain no-repeat;image-rendering:pixelated;animation:burst .8s ease-out forwards}
+@keyframes burst{to{transform:translate(var(--dx),var(--dy)) rotate(180deg);opacity:0}}
+
+/* result */
+.congrats{font-size:30px;font-weight:900;text-align:center;background:linear-gradient(90deg,#ff0066,#ff9900,#ffe100,#33cc33,#3399ff,#9933ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;padding:4px 0}
+.big{text-align:center;font-family:"DotGothic16",monospace;color:#ff1493;text-shadow:2px 2px 0 #ffe100}
+.res .stat b{font-size:22px}
+
+/* footer */
+.foot{margin-top:18px;text-align:center;font-size:14px;color:#552288}
+.foot p{margin:6px 0}
+
+/* compact (phone with keyboard open): keep it clean */
+body.compact .top,body.compact .col,body.compact .foot,body.compact .titlebox{display:none!important}
+body.compact .layout{display:block;margin:0}
+body.compact #practice{background:#fffbe0;border:0;box-shadow:none;margin:0}
+body.compact #practice > .cap{display:none}
+body.compact .target{margin:0;padding:4px 8px;border-width:3px}
+body.compact .hint{border-width:2px}
+
+@media (max-width:600px){
+  .welcome{font-size:22px}
+  .welcome .px{display:none}
+  .subtitle{font-size:17px}
+  .titlebox h2{font-size:20px}
+  .px.lg{width:34px;height:34px}
+  .birds{gap:4px;height:34px}
+  .birds .px{width:26px;height:26px}
+  .b-purple .big-u{font-size:18px}
+}
+/* compact: put the two small buttons beside the input to save height */
+body.compact #practice{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:minmax(0,1fr) auto auto;
+  grid-template-areas:"t t" "h h" "i c";column-gap:6px;row-gap:6px}
+body.compact #target{grid-area:t;min-height:0}
+body.compact #hintBox{grid-area:h}
+body.compact #inp{grid-area:i}
+body.compact .cbar{grid-area:c;flex-direction:column;justify-content:center;gap:3px}
+body.compact .cbar #cProg,body.compact .cbar #cSpeed,body.compact .cbar .sp{display:none}
+body.compact .cbar button{font-size:11px;padding:0 6px;height:18px;line-height:1;white-space:nowrap}
 </style>
 </head>
+
 <body>
 <div class="wrap">
-  <header>
-    <h1>日语文章打字练习</h1>
-    <p>贴入任何日语文章，用你自己的输入法逐句打出来。电脑罗马字、手机 flick 都可以。</p>
+  <header class="top">
+    <div class="birds" id="birds"></div>
+    <h1 class="welcome"><i class="px lg hop" data-s="chick"></i>欢迎！欢迎！我们欢迎你……<i class="px lg hop" data-s="chick"></i></h1>
+    <div class="subtitle">★ 日语文章打字练习 ★</div>
+    <div class="marquee"><span>☆ 本站建议使用 800×600 解析度浏览 ☆ 贴入任何日语文章，用你自己的输入法一句一句打出来 ☆ 电脑罗马字、手机 flick 都可以 ☆ 打错的句子最后可以重练喔 ☆ 欢迎常来玩！☆</span></div>
   </header>
 
-  <!-- setup -->
-  <section id="setup" class="card">
-    <textarea id="src" placeholder="在这里粘贴日语文章（新闻、小说、歌词、自己的笔记都可以）…"></textarea>
-    <div class="row space">
-      <div class="row" style="margin:0">
-        <label class="filebtn">上传 .txt 文件<input id="file" type="file" accept=".txt,text/plain"></label>
-        <button class="ghost" id="sample">放一段示例</button>
-        <button class="ghost" id="clear">清空</button>
+  <div class="layout">
+    <!-- ========== left column ========== -->
+    <aside class="col left">
+      <div class="box b-mint">
+        <h3><i class="px" data-s="cat"></i>网站宗旨</h3>
+        <div class="in">贴入任何日语文章（新闻、小说、歌词、自己的笔记），用你自己的输入法一句一句打出来！练速度、练变换、练手感 ♪</div>
       </div>
-      <span class="note" id="count" style="margin:0"></span>
-    </div>
-    <div class="opts">
-      <label>分句方式
-        <select id="mode">
-          <option value="sentence">按句子（。！？）</option>
-          <option value="line">按行 / 段落</option>
-        </select>
-      </label>
-      <label><input type="checkbox" id="nopunct"> 不用打标点</label>
-      <label><input type="checkbox" id="nospace" checked> 忽略空格</label>
-      <label>每句重复
-        <select id="reps">
-          <option value="1">1 遍</option>
-          <option value="2">2 遍</option>
-          <option value="3">3 遍</option>
-          <option value="5">5 遍</option>
-        </select>
-      </label>
-    </div>
-    <div class="opts ime">
-      <label>我的输入法
-        <select id="ime">
-          <option value="romaji">罗马字输入（电脑 / 手机全键盘）</option>
-          <option value="flick">手机 flick（12 键假名）</option>
-          <option value="kana">电脑假名输入（JIS かな配列）</option>
-        </select>
-      </label>
-      <label id="kbdWrap">键盘布局
-        <select id="kbd">
-          <option value="us">美式（US）</option>
-          <option value="jis">日式（JIS）</option>
-        </select>
-      </label>
-      <label><input type="checkbox" id="hint"> 显示按键提示和读音</label>
-    </div>
-    <div class="row">
-      <button class="primary" id="start">开始练习</button>
-      <button id="resume" class="hidden"></button>
-    </div>
-    <div class="note">打完一句会自动跳到下一句；全角/半角、英文大小写不算错。文章只保存在你自己的浏览器里。<br>
-      按键提示第一次使用时需要下载约 18MB 的读音词典，之后浏览器会缓存。汉字读音由词典自动判断，偶尔会不准。</div>
-  </section>
-
-  <!-- practice -->
-  <section id="practice" class="card hidden">
-    <div class="cbar">
-      <span id="cProg">0/0</span><span id="cSpeed"></span>
-      <span class="sp"></span>
-      <button id="cHint">提示</button>
-      <button id="cDone">收起键盘</button>
-    </div>
-    <div class="stats">
-      <div class="stat"><b id="sProg">0/0</b><span>进度</span></div>
-      <div class="stat"><b id="sSpeed">0</b><span>字/分钟</span></div>
-      <div class="stat"><b id="sAcc">100%</b><span>正确率</span></div>
-      <div class="stat"><b id="sTime">0:00</b><span>用时</span></div>
-    </div>
-    <div class="bar"><i id="bar"></i></div>
-    <div class="target" id="target"></div>
-    <div class="next" id="next"></div>
-    <div class="hint hidden" id="hintBox"></div>
-    <textarea id="inp" rows="2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="在这里打字…"></textarea>
-    <div class="msg" id="msg"></div>
-    <div class="row space prow">
-      <div class="row" style="margin:0">
-        <button id="prev">上一句</button>
-        <button id="redo">重打</button>
-        <button id="skip">跳过</button>
-        <button id="hintBtn">提示</button>
+      <div class="box b-purple">
+        <span class="big-u">本站<br>建议使用 800*600<br>解析度浏览！</span>
+        <div style="padding:0 8px 10px;color:#fff;font-weight:700">（手机也可以喔 <i class="px sm" data-s="heart"></i>）</div>
       </div>
-      <button class="ghost" id="back">换文章 / 设置</button>
-    </div>
-  </section>
+      <div class="box b-red">
+        <h3>您好!! 亲爱的网友!!</h3>
+        <div class="row1">多谢支持！</div>
+        <div class="row1">① 贴文章或上传 .txt<br>② 选好你的输入法<br>③ 按「开始练习」！</div>
+        <div class="row1">勾选「按键提示」，会告诉你下一个键在哪里，还会帮汉字标上假名。</div>
+        <div class="row1">文章和进度只存在你自己的浏览器里，不会上传喔～</div>
+      </div>
+      <div class="construct"><div>🚧 本站持续施工中 🚧<br><small>不定期更新！</small></div></div>
+    </aside>
 
-  <!-- result -->
-  <section id="result" class="card hidden">
-    <div style="color:var(--muted);font-size:14px">全部打完了 🎉</div>
-    <div class="big" id="rSpeed">0 字/分钟</div>
-    <div class="res">
-      <div class="stat"><b id="rChars">0</b><span>打了多少字</span></div>
-      <div class="stat"><b id="rAcc">0%</b><span>正确率</span></div>
-      <div class="stat"><b id="rTime">0:00</b><span>用时</span></div>
-    </div>
-    <div class="row">
-      <button class="primary" id="drill">只重练打错的句子</button>
-      <button id="again">同一篇再来一次</button>
-      <button id="newtext">换一篇文章</button>
-    </div>
-  </section>
+    <!-- ========== main column ========== -->
+    <main class="main">
+      <div class="titlebox">
+        <h2><i class="px" data-s="cup"></i>我的打字小网页<i class="px sm hop" data-s="star"></i><i class="px sm hop" data-s="star"></i></h2>
+        <p>贴入任何日语文章，用你自己的输入法逐句打出来。电脑罗马字、手机 flick 都可以。</p>
+      </div>
+
+      <!-- setup -->
+      <section id="setup" class="card">
+        <div class="cap"><i class="px sm" data-s="star"></i>STEP 1　贴上你的文章</div>
+        <textarea id="src" placeholder="在这里粘贴日语文章（新闻、小说、歌词、自己的笔记都可以）…"></textarea>
+        <div class="row space">
+          <div class="row" style="margin:0">
+            <label class="filebtn">上传 .txt 文件<input id="file" type="file" accept=".txt,text/plain"></label>
+            <button class="ghost" id="sample">放一段示例</button>
+            <button class="ghost" id="clear">清空</button>
+          </div>
+          <span class="note" id="count" style="margin:0"></span>
+        </div>
+        <div class="opts">
+          <label>分句方式
+            <select id="mode">
+              <option value="sentence">按句子（。！？）</option>
+              <option value="line">按行 / 段落</option>
+            </select>
+          </label>
+          <label><input type="checkbox" id="nopunct"> 不用打标点</label>
+          <label><input type="checkbox" id="nospace" checked> 忽略空格</label>
+          <label>每句重复
+            <select id="reps">
+              <option value="1">1 遍</option>
+              <option value="2">2 遍</option>
+              <option value="3">3 遍</option>
+              <option value="5">5 遍</option>
+            </select>
+          </label>
+        </div>
+        <div class="opts ime">
+          <label>我的输入法
+            <select id="ime">
+              <option value="romaji">罗马字输入（电脑 / 手机全键盘）</option>
+              <option value="flick">手机 flick（12 键假名）</option>
+              <option value="kana">电脑假名输入（JIS かな配列）</option>
+            </select>
+          </label>
+          <label id="kbdWrap">键盘布局
+            <select id="kbd">
+              <option value="us">美式（US）</option>
+              <option value="jis">日式（JIS）</option>
+            </select>
+          </label>
+          <label><input type="checkbox" id="hint"> 显示按键提示和读音 <span class="new blink">NEW!!</span></label>
+        </div>
+        <div class="row">
+          <button class="primary" id="start">★ 开始练习 ★</button>
+          <button id="resume" class="hidden"></button>
+        </div>
+        <div class="note">打完一句会自动跳到下一句；全角/半角、英文大小写不算错。文章只保存在你自己的浏览器里。<br>
+          按键提示第一次使用时需要下载约 18MB 的读音词典，之后浏览器会缓存。汉字读音由词典自动判断，偶尔会不准。</div>
+      </section>
+
+      <!-- practice -->
+      <section id="practice" class="card hidden">
+        <div class="cap"><i class="px sm" data-s="star"></i>STEP 2　努力打字中…<i class="px sm hop" data-s="chick"></i></div>
+        <div class="cbar">
+          <span id="cProg">0/0</span><span id="cSpeed"></span>
+          <span class="sp"></span>
+          <button id="cHint">提示</button>
+          <button id="cDone">收起键盘</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><b id="sProg">0/0</b><span>进度</span></div>
+          <div class="stat"><b id="sSpeed">0</b><span>字/分钟</span></div>
+          <div class="stat"><b id="sAcc">100%</b><span>正确率</span></div>
+          <div class="stat"><b id="sTime">0:00</b><span>用时</span></div>
+        </div>
+        <div class="bar"><i id="bar"></i></div>
+        <div class="target" id="target"></div>
+        <div class="next" id="next"></div>
+        <div class="hint hidden" id="hintBox"></div>
+        <textarea id="inp" rows="2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="在这里打字…"></textarea>
+        <div class="msg" id="msg"></div>
+        <div class="row space prow">
+          <div class="row" style="margin:0">
+            <button id="prev">上一句</button>
+            <button id="redo">重打</button>
+            <button id="skip">跳过</button>
+            <button id="hintBtn">提示</button>
+          </div>
+          <button class="ghost" id="back">换文章 / 设置</button>
+        </div>
+      </section>
+
+      <!-- result -->
+      <section id="result" class="card hidden">
+        <div class="cap"><i class="px sm" data-s="heart"></i>STEP 3　成绩发表！</div>
+        <div class="congrats">★☆ 恭喜你！全部打完了！！ ☆★</div>
+        <div class="big" id="rSpeed">0 字/分钟</div>
+        <div class="res">
+          <div class="stat"><b id="rChars">0</b><span>打了多少字</span></div>
+          <div class="stat"><b id="rAcc">0%</b><span>正确率</span></div>
+          <div class="stat"><b id="rTime">0:00</b><span>用时</span></div>
+        </div>
+        <div class="row">
+          <button class="primary" id="drill">只重练打错的句子</button>
+          <button id="again">同一篇再来一次</button>
+          <button id="newtext">换一篇文章</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- ========== right column ========== -->
+    <aside class="col right">
+      <div class="box b-pink"><div class="inner">
+        <h3>档案</h3>
+        <div class="prow2">来访次数 <span class="odo" id="visits"></span></div>
+        <div class="prow2"><b>浏览器</b><span id="browser">—</span></div>
+        <div class="prow2"><b>累计打完</b><span id="lifeSegs">0 句</span></div>
+        <div class="prow2"><b>累计字数</b><span id="lifeChars">0 字</span></div>
+        <div class="prow2"><b>最高速度</b><span id="bestCpm">— 字/分</span></div>
+      </div></div>
+      <div class="box b-news">
+        <h3>最新情报 <span class="new blink">NEW!!</span></h3>
+        <div class="in"><ul>
+          <li>11/24 网页换上复古新装 ♪</li>
+          <li>11/19 手机打字紧凑模式</li>
+          <li>11/19 屏幕键盘标出下一个键</li>
+          <li>11/19 输入法按键提示＆假名注音</li>
+          <li>11/19 本站开张！</li>
+        </ul></div>
+      </div>
+      <div class="box b-mint" style="text-align:center">
+        <div class="in"><i class="px hop" data-s="parrot"></i><i class="px hop" data-s="chick"></i><i class="px hop" data-s="parrot"></i><br>
+          每天打一篇，<br>日文越打越顺手！</div>
+      </div>
+      <div class="badges">
+        <span class="badge88" style="background:#000;color:#0f0">日本語<br>OK!</span>
+        <span class="badge88" style="background:#ffe6f3;color:#ff1493">♥ 手工<br>HTML</span>
+        <span class="badge88" style="background:#000080;color:#ff0">800×600<br>BEST VIEW</span>
+        <span class="badge88" style="background:#fffbd0;color:#cc6600">打字<br>练习中</span>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="foot">
+    <p>这是您老人家第 <span class="odo" id="visits2"></span> 次光临本站</p>
+    <p>你正在使用的浏览器是：<b id="browser2">—</b></p>
+    <p><i class="px sm" data-s="star"></i> © 2026 Ryu 的打字小网页 <i class="px sm" data-s="star"></i></p>
+  </footer>
 </div>
 
 <script>
@@ -611,7 +840,7 @@ function keepCursorVisible(){
   const el = box.querySelector('.c, .w, .p') || box.lastElementChild;
   if(!el) return;
   const r = el.getBoundingClientRect(), b = box.getBoundingClientRect();
-  if(r.bottom > b.bottom - 2 || r.top < b.top + 2) box.scrollTop += (r.top - b.top) - 6;
+  if(r.bottom > b.bottom - 2 || r.top < b.top + (box.classList.contains("ruby") ? 16 : 2)) box.scrollTop += (r.top - b.top) - (box.classList.contains("ruby") ? 20 : 6);
 }
 
 /* ---------- hint ---------- */
@@ -953,6 +1182,7 @@ function handle(commit){
 function complete(){
   advancing = true;
   log.push({chars: tgt.length, errs: segErr});
+  life.segs++; life.chars += tgt.length; saveLife(); burst();
   if(segErr > 0) wrong.add(segs[S.idx]);
   $('target').classList.remove('flash'); void $('target').offsetWidth; $('target').classList.add('flash');
   setTimeout(() => {
@@ -984,6 +1214,8 @@ function finish(){
   clearInterval(tick);
   const t = totals(), min = activeMs/60000;
   $('rSpeed').textContent = (min>0 && t.chars ? Math.round(t.chars/min) : 0) + ' 字/分钟';
+  const cpm = min>0 && t.chars ? Math.round(t.chars/min) : 0;
+  if(t.chars >= 20 && cpm > life.best){ life.best = cpm; saveLife(); }
   $('rChars').textContent = t.chars;
   $('rAcc').textContent = acc(t);
   $('rTime').textContent = fmt(activeMs);
@@ -1043,6 +1275,65 @@ function refreshResume(){
   } else b.classList.add('hidden');
 }
 $('src').addEventListener('input', refreshResume);
+
+/* =========================================================
+   Retro decorations: pixel sprites, counter, browser, stats
+   ========================================================= */
+const PAL = {K:'#333',W:'#fff',O:'#ff9900',Y:'#ffe14d',R:'#e0004d',P:'#ff8fc0',G:'#3cb44b',L:'#a6e36b',B:'#3399ff',S:'#c8c8c8',E:'#111',N:'#8b5a2b'};
+const SPR = {
+  chick:['....YYYY....','...YYYYYY...','..YYYEYYYY..','..YYYYYYYOO.','..YYYYYYYO..','.YYYYYYYYY..','YYYYWWYYYYY.','YYYWWWWYYYY.','.YYYWWYYYYY.','..YYYYYYYY..','...O....O...','..OO...OO...'],
+  parrot:['.....PP.....','....PPPP....','...PPEPPO...','...PPPPPOO..','...GGGGPO...','..GGGGGG....','..GGLGGGG...','..GGLLGGG...','..GGGLGGG...','...GGGGG....','....GGG.....','....N.N.....'],
+  star:['.....O.....','....OYO....','....OYO....','OOOOYYYOOOO','.OYYYYYYYO.','..OYYYYYO..','..OYYYYYO..','.OYYOOOYYO.','.OYO...OYO.','OYO.....OYO','OO.......OO'],
+  heart:['.RR...RR.','RPPR.RPPR','RPWPRPPPR','RPPPPPPPR','.RPPPPPR.','..RPPPR..','...RPR...','....R....'],
+  cat:['.K........K.','.KK......KK.','.KOK....KOK.','.KWWKKKKWWK.','KWWWWWWWWWWK','KWEWWWWWWEWK','KWWWWPPWWWWK','KWWWKWWKWWWK','.KWWWWWWWWK.','..KKKKKKKK..'],
+  cup:['...S..S.....','..S..S......','............','KKKKKKKKKK..','KWWWWWWWWKKK','KWBBWWBBWK.K','KWWWWWWWWKKK','.KWWWWWWK...','..KKKKKK....','.KKKKKKKKK..']
+};
+function spriteURL(rows){
+  const w = rows[0].length, h = rows.length; let r = '';
+  rows.forEach((row, y) => [...row].forEach((c, x) => { if(c !== '.') r += `<rect x='${x}' y='${y}' width='1.02' height='1.02' fill='${PAL[c]}'/>`; }));
+  return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${w} ${h}' shape-rendering='crispEdges'>${r}</svg>`)}")`;
+}
+const SPR_URL = {}; for(const k in SPR) SPR_URL[k] = spriteURL(SPR[k]);
+(function decorate(){
+  const root = document.documentElement.style;
+  root.setProperty('--spr-star', SPR_URL.star); root.setProperty('--spr-heart', SPR_URL.heart);
+  const pat = `<svg xmlns='http://www.w3.org/2000/svg' width='44' height='44'><g fill='none' stroke='%23ffffff' stroke-width='1.4' opacity='.75'><path d='M8 6l2 4 4 1-4 1-2 4-2-4-4-1 4-1z'/><circle cx='31' cy='29' r='2.2'/><path d='M22 14q4-3 8 0'/><path d='M14 34q3 3 6 0'/></g></svg>`;
+  root.setProperty('--bg-pattern', `url("data:image/svg+xml,${pat.replace(/#/g,'%23').replace(/</g,'%3C').replace(/>/g,'%3E').replace(/"/g,"'")}")`);
+  const birds = $('birds');
+  for(let n=0;n<10;n++){ const i = document.createElement('i'); i.className = 'px hop'; i.dataset.s = n % 5 === 2 ? 'chick' : 'parrot'; birds.appendChild(i); }
+  document.querySelectorAll('.px[data-s]').forEach(el => el.style.setProperty('--s', SPR_URL[el.dataset.s]));
+})();
+
+const LKEY = 'jp-typing-life-v1';
+let life = {visits:0, segs:0, chars:0, best:0};
+try{ Object.assign(life, JSON.parse(localStorage.getItem(LKEY) || '{}')); }catch(e){}
+function saveLife(){ try{ localStorage.setItem(LKEY, JSON.stringify(life)); }catch(e){} showLife(); }
+function odo(n){ return String(n).padStart(6,'0').split('').map(d => `<i>${d}</i>`).join(''); }
+function showLife(){
+  $('visits').innerHTML = odo(life.visits); $('visits2').innerHTML = odo(life.visits);
+  $('lifeSegs').textContent = life.segs + ' 句';
+  $('lifeChars').textContent = life.chars + ' 字';
+  $('bestCpm').textContent = life.best ? life.best + ' 字/分' : '— 字/分';
+}
+(function(){
+  const ua = navigator.userAgent;
+  let b = /Edg\//.test(ua) ? 'Edge' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /FxiOS|Firefox\//.test(ua) ? 'Firefox' : /Safari\//.test(ua) ? 'Safari' : '神秘浏览器';
+  if(/iPhone/.test(ua)) b += '（iPhone）'; else if(/iPad/.test(ua)) b += '（iPad）'; else if(/Android/.test(ua)) b += '（Android）';
+  $('browser').textContent = b; $('browser2').textContent = b;
+  life.visits++; saveLife();
+})();
+function burst(){
+  if(compact) return;
+  const r = $('target').getBoundingClientRect();
+  for(let n=0;n<7;n++){
+    const s = document.createElement('i'); s.className = 'burst';
+    s.style.left = (r.left + r.width*(0.2 + Math.random()*0.6)) + 'px';
+    s.style.top = (r.top + r.height/2) + 'px';
+    s.style.setProperty('--dx', (Math.random()*160-80) + 'px');
+    s.style.setProperty('--dy', (-40 - Math.random()*90) + 'px');
+    document.body.appendChild(s); setTimeout(() => s.remove(), 850);
+  }
+}
 
 /* init */
 load();
